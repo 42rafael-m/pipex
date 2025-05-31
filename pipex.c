@@ -28,13 +28,32 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
+char	*ft_strdup(const char *src)
+{
+	char		*dest;
+	size_t		size;
+
+	size = ft_strlen(src);
+	dest = (char *)ft_calloc((size + 1), sizeof(char));
+	if (!dest)
+		return (NULL);
+	ft_strlcpy(dest, src, size + 1);
+	return (dest);
+}
+
 int ft_child(char *cmd1, char *file1, int pipefd[1])
 {
     char buffer;
     ssize_t bytes_read;
+    char    *pathname;
 
-
-    execve();
+    if (ft_strchr(cmd1, '/'))
+        pathname = cmd1;
+    else
+        pathname = ft_strdup("/bin:usr/bin");
+    if (!(access(pathname, X_OK)))
+            return (-1);
+    execve(pathname, );
     bytes_read = read(pipefd[0], &buffer, 1);
     while (bytes_read > 0)
     {
