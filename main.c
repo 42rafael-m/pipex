@@ -5,42 +5,86 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 
-int main()
+char	*ft_strstr(const char *str, const char *to_find)
 {
-    ssize_t size;
-    char   *buffer;
-    pid_t pid;
-    pid_t pid2;
-    int status;
-    int pipefd[2];
-    int fdin;
-    int fdout;
+	int	i;
+	int	j;
 
-    pid = 0;
-    pid = 0;
-    buffer = (char *)calloc(6, 1);
-    
-    pipe(pipefd);
-    fdin = pipefd[0];
-    fdout = pipefd[1];
-    fdin = open("input", O_RDONLY);
-    fdout = open("output", O_WRONLY);
-    size = read(fdin, buffer, 5);
-    pid = fork();
-    if (pid)
-        pid2 = waitpid(pid, &status, 0);
-    if (!pid) 
+	i = 0;
+	j = 0;
+	if (!*to_find)
+		return ((char *)str);
+	while (str[i])
+	{
+		j = 0;
+		while (str[i + j] == to_find[j])
+		{
+			j++;
+			if (!to_find[j])
+				return ((char *)&str[i]);
+		}
+		i++;
+	}
+	return (NULL);
+}
+
+char    *ft_path(char **envp)
+{
+    int i;
+    char    *path;
+
+    i = 0;
+    path = NULL;
+    while (envp[i])
     {
-        write(2, buffer, 5);
-        write(fdout, buffer, 5);
+        if (ft_strstr(envp[i], "PATH"))
+            path = envp[i] + 5;
+        i++;
     }
-    // printf("buffer = %s\n", buffer);
-    printf("pid2 = %d\n", pid2);
-    printf("pid = %d\n", pid);
-    if (pid2 && pid2 != -1)
-        _exit(status);
-    free(buffer);
-    close(pipefd[0]);
+    return (path);
+}
+
+int main(int argc, char **argv, char **envp)
+{
+    int i = 0;
+    char *path;
+
+    path = ft_path(envp);
+    printf("%s\n", path);
+    // ssize_t size;
+    // char   *buffer;
+    // pid_t pid;
+    // pid_t pid2;
+    // int status;
+    // int pipefd[2];
+    // int fdin;
+    // int fdout;
+
+    // pid = 0;
+    // pid = 0;
+    // buffer = (char *)calloc(6, 1);
+    
+    // pipe(pipefd);
+    // fdin = pipefd[0];
+    // fdout = pipefd[1];
+    // fdin = open("input", O_RDONLY);
+    // fdout = open("output", O_WRONLY);
+    // size = read(fdin, buffer, 5);
+    // pid = fork();
+    // if (pid)
+    //     pid2 = waitpid(pid, &status, 0);
+    // if (!pid) 
+    // {
+    //     write(2, buffer, 5);
+    //     write(fdout, buffer, 5);
+    // }
+    // // printf("buffer = %s\n", buffer);
+    // printf("pid2 = %d\n", pid2);
+    // printf("pid = %d\n", pid);
+    // if (pid2 && pid2 != -1)
+    //     _exit(status);
+    // free(buffer);
+    // close(pipefd[0]);
     // _exit(0);
     //_exit(0);
     // int fd2 = dup(fd);

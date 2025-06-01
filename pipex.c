@@ -41,7 +41,46 @@ char	*ft_strdup(const char *src)
 	return (dest);
 }
 
-int ft_child(char *cmd1, char *file1, int pipefd[1])
+char	*ft_strstr(const char *str, const char *to_find)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	if (!*to_find)
+		return ((char *)str);
+	while (str[i])
+	{
+		j = 0;
+		while (str[i + j] == to_find[j])
+		{
+			j++;
+			if (!to_find[j])
+				return ((char *)&str[i]);
+		}
+		i++;
+	}
+	return (NULL);
+}
+
+char    *ft_path(char **envp)
+{
+    int i;
+    char    *path;
+
+    i = 0;
+    path = NULL;
+    while (envp[i])
+    {
+        if (ft_strstr(envp[i], "PATH"))
+            path = envp[i] + 5;
+        i++;
+    }
+    return (path);
+}
+
+int ft_child(char *cmd1, char *file1, int writefd, char **envp)
 {
     char buffer;
     ssize_t bytes_read;
@@ -54,10 +93,10 @@ int ft_child(char *cmd1, char *file1, int pipefd[1])
     if (!(access(pathname, X_OK)))
             return (-1);
     execve(pathname, );
-    bytes_read = read(pipefd[0], &buffer, 1);
+    bytes_read = read(writefd, &buffer, 1);
     while (bytes_read > 0)
     {
-        bytes_read = read(pipefd[0], &buffer, 1);
+        bytes_read = read(writefd, &buffer, 1);
     }
 }
 
@@ -66,7 +105,7 @@ int ft_parent()
 
 }
 
-int ft_pipex(char *cmd1, char *cmd2, char *file1, char *file2)
+int ft_pipex(char *cmd1, char *cmd2, char *file1, char *file2, char **envp)
 {
     int pipefd[2];
     pid_t   pid;
@@ -84,17 +123,18 @@ int ft_pipex(char *cmd1, char *cmd2, char *file1, char *file2)
        exit(EXIT_FAILURE);
     }
     if (pid > 0)
-        ft_child(cmd1, file1, pipefd[1]);
+        ft_child(cmd1, file1, pipefd[1], envp);
     if (pid == 0)
-        ft_parent(cmd2, file2, pipefd[0]); 
+        ft_parent(cmd2, file2, pipefd[0], envp); 
 }
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **envp)
 {
-    char *cmd1;
-    char *cmd2;
-    char *file1;
-    char *file2;
+    char    *cmd1;
+    char    *cmd2;
+    char    *file1;
+    char    *file2;
+    char    *path;
 
     if (argc != 5)
     {
@@ -105,5 +145,6 @@ int main(int argc, char **argv)
     cmd2 = (char *)malloc(ft_strlen(argv[3]));
     file1 = (char *)malloc(ft_strlen(argv[4]));
     file2 = (char *)malloc(ft_strlen(argv[5]));
-    ft_pipex(cmd1, cmd2, file1, file2);
+    path = ft_path(envp);
+    ft_pipex(cmd1, cmd2, file1, file2, envp);
 }
