@@ -2,79 +2,24 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/wait.h>
+//#include "pipex.h"
+#include <stdio.h>
+#include "libft.h"
 
-size_t ft_strlen(char *s)
-{
-    int	i;
-
-	i = 0;
-	if (!s)
-		return (0);
-	while (s[i])
-		i++;
-	return (i);
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	while (*s)
-	{
-		if ((unsigned char)c == *s)
-			return ((char *)s);
-		s++;
-	}
-	if ((unsigned char)c == *s)
-		return ((char *)s);
-	return (NULL);
-}
-
-char	*ft_strdup(const char *src)
-{
-	char		*dest;
-	size_t		size;
-
-	size = ft_strlen(src);
-	dest = (char *)ft_calloc((size + 1), sizeof(char));
-	if (!dest)
-		return (NULL);
-	ft_strlcpy(dest, src, size + 1);
-	return (dest);
-}
-
-char	*ft_strstr(const char *str, const char *to_find)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	if (!*to_find)
-		return ((char *)str);
-	while (str[i])
-	{
-		j = 0;
-		while (str[i + j] == to_find[j])
-		{
-			j++;
-			if (!to_find[j])
-				return ((char *)&str[i]);
-		}
-		i++;
-	}
-	return (NULL);
-}
-
-char    *ft_path(char **envp)
+char    **ft_path(char **envp)
 {
     int i;
-    char    *path;
+    char    **path;
 
     i = 0;
     path = NULL;
     while (envp[i])
     {
         if (ft_strstr(envp[i], "PATH"))
-            path = envp[i] + 5;
+        {
+			path = ft_split(envp[i] + 5, ':');
+
+		}
         i++;
     }
     return (path);
@@ -82,22 +27,17 @@ char    *ft_path(char **envp)
 
 int ft_child(char *cmd1, char *file1, int writefd, char **envp)
 {
-    char buffer;
-    ssize_t bytes_read;
-    char    *pathname;
+    // char buffer;
+    // ssize_t bytes_read;
+    // char    *path;
 
-    if (ft_strchr(cmd1, '/'))
-        pathname = cmd1;
-    else
-        pathname = ft_strdup("/bin:usr/bin");
-    if (!(access(pathname, X_OK)))
-            return (-1);
-    execve(pathname, );
-    bytes_read = read(writefd, &buffer, 1);
-    while (bytes_read > 0)
-    {
-        bytes_read = read(writefd, &buffer, 1);
-    }
+    
+    // execve(path, );
+    // bytes_read = read(writefd, &buffer, 1);
+    // while (bytes_read > 0)
+    // {
+    //     bytes_read = read(writefd, &buffer, 1);
+    // }
 }
 
 int ft_parent()
@@ -105,12 +45,14 @@ int ft_parent()
 
 }
 
-int ft_pipex(char *cmd1, char *cmd2, char *file1, char *file2, char **envp)
+int ft_pipex(char *cmd1, char *cmd2, char *file1, char *file2, char **path)
 {
     int pipefd[2];
     pid_t   pid;
 
 
+    if (!(access(cmd1, X_OK)) || !(access(cmd2, X_OK)))
+            return (0);
     if (pipe(pipefd) == -1)
     {
        perror("pipe");
@@ -123,9 +65,9 @@ int ft_pipex(char *cmd1, char *cmd2, char *file1, char *file2, char **envp)
        exit(EXIT_FAILURE);
     }
     if (pid > 0)
-        ft_child(cmd1, file1, pipefd[1], envp);
+        ft_child(cmd1, file1, pipefd[1], path);
     if (pid == 0)
-        ft_parent(cmd2, file2, pipefd[0], envp); 
+        ft_parent(cmd2, file2, pipefd[0], path); 
 }
 
 int main(int argc, char **argv, char **envp)
@@ -134,17 +76,23 @@ int main(int argc, char **argv, char **envp)
     char    *cmd2;
     char    *file1;
     char    *file2;
-    char    *path;
+    char    **path;
 
+	int	i = 0; 
     if (argc != 5)
     {
-        write(2, "Error: 4 arguments needed in the form of: file1 cmd1 | cmd2 > file2\n", 68);
-        return (1);
+         write(2, "Error: 4 arguments needed in the form of: file1 cmd1 | cmd2 > file2\n", 68);
+         return (1);
     }
     cmd1 = (char *)malloc(ft_strlen(argv[2]));
     cmd2 = (char *)malloc(ft_strlen(argv[3]));
     file1 = (char *)malloc(ft_strlen(argv[4]));
     file2 = (char *)malloc(ft_strlen(argv[5]));
     path = ft_path(envp);
-    ft_pipex(cmd1, cmd2, file1, file2, envp);
+	while (path[i])
+	{
+		printf("%s\n", path[i]);
+		i++;
+	}
+    ft_pipex(cmd1, cmd2, file1, file2, path);
 }
