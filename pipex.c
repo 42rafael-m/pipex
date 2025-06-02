@@ -1,11 +1,17 @@
-#include <unistd.h>
-#include <errno.h>
-#include <stdlib.h>
-#include <sys/wait.h>
-//#include "pipex.h"
-#include <stdio.h>
-#include "libft.h"
-#include <fcntl.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rafael-m <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/02 19:02:35 by rafael-m          #+#    #+#             */
+/*   Updated: 2025/06/02 19:02:38 by rafael-m         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
 
 char    **ft_path(char **envp)
 {
@@ -132,7 +138,7 @@ int ft_pipex(char *cmd1, char *cmd2, int infile, int outfile, char **path, char 
         return(write(2, "Can´t wait", 12), free(pathname1), free(pathname2), 0);
     if (!ft_parent(cmd2, outfile, pipefd, pathname2, envp))
         return (free(pathname1), free(pathname2), 0);
-    return (1);
+    return (free(pathname1), free(pathname2),1);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -158,5 +164,5 @@ int main(int argc, char **argv, char **envp)
         return (write(2, "Invalid path", 13), 1); 
     if ((!ft_pipex(cmd1, cmd2, infile, outfile, path, envp)))
         return (ft_free_double_ptr(path), 1);
-    return (0);
+    return (ft_free_double_ptr(path), 0);
 }
