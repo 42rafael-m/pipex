@@ -46,11 +46,8 @@ char    *ft_path(char **envp)
 
 int main(int argc, char **argv, char **envp)
 {
-    int i = 0;
-    char *path;
-
-    path = ft_path(envp);
-    printf("%s\n", path);
+    // path = ft_path(envp);
+    // printf("%s\n", path);
     // ssize_t size;
     // char   *buffer;
     // pid_t pid;

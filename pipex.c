@@ -5,6 +5,7 @@
 //#include "pipex.h"
 #include <stdio.h>
 #include "libft.h"
+#include <fcntl.h>
 
 char    **ft_path(char **envp)
 {
@@ -38,90 +39,122 @@ char *ft_access_path(char **path, char *cmd)
         t = ft_substr(cmd, 0, pos - cmd);
     else
         t = ft_substr(cmd, 0, ft_strlen(cmd));
+    if (!t)
+        return (NULL);
     while (path[i])
     {
         s = ft_strjoin(path[i], "/");
+        if (!s)
+            return (free(t), t = NULL, NULL);
         pathname = ft_strjoin(s, t);
-        //printf("pathname = %s\n", pathname);
+        if (!pathname)
+            return (free(t), t = NULL, free(s), s = NULL, NULL);
         free(s);
         s = NULL;
-        //printf("access = %i\n", access(pathname, X_OK));
         if (!access(pathname, X_OK))
             return(free(t), t = NULL, pathname);
         free(pathname);
         pathname = NULL;
         i++;
-    }
-    free(t);
-    t = NULL;
-    return (NULL);
+    }  
+    return (free(t), t = NULL, NULL);
 }
 
-int ft_child(char *cmd1, char *file1, int writefd, char *pathname, char **envp)
+int ft_child(char *cmd1, int infile, int *pipefd, char *pathname, char **envp)
 {
-    char buffer;
-    ssize_t bytes_read;
     char    **argv;
-
+    int status;
     argv = ft_split(cmd1, ' ');
+    if (!argv)
+        return (0);
+    if(dup2(pipefd[1], STDOUT_FILENO) == -1)
+        return (0);
+    if(dup2(infile, STDIN_FILENO) == -1)
+        return (0);
+    close(pipefd[1]);
+    close(pipefd[0]);
     execve(pathname, argv, envp);
+    perror("execve");
+    exit(EXIT_FAILURE);
+    return (1);
 }
 
-int ft_parent()
+int ft_parent(char *cmd2, int outfile, int *pipefd, char *pathname, char **envp)
 {
+    int i = 0;
+    char    **argv;
+    char buffer;
+    int status;
 
+    argv = ft_split(cmd2, ' ');
+
+    if(dup2(pipefd[0], STDIN_FILENO) == -1)
+        return (0);
+    if(dup2(outfile, STDOUT_FILENO) == -1)
+        return (0);
+    close(pipefd[1]);
+    close(pipefd[0]);
+    printf("HOLA");
+    execve(pathname, argv, envp);
+    exit(status);
 }
 
-int ft_pipex(char *cmd1, char *cmd2, char *file1, char *file2, char **path, char **envp)
+int ft_pipex(char *cmd1, char *cmd2, int infile, int outfile, char **path, char **envp)
 {
     int pipefd[2];
     pid_t   pid;
     char    *pathname1;
     char    *pathname2;
+    int status;
+    int status2;
 
     pathname1 = ft_access_path(path, cmd1);
     pathname2 = ft_access_path(path, cmd2);
-    if (!(pathname1 || pathname2))
+    if (!(pathname1 || !pathname2))
             return (0);
     if (pipe(pipefd) == -1)
     {
-       perror("pipe");
-       exit(EXIT_FAILURE);
+        perror("pipe");
+        exit(EXIT_FAILURE);
     }
     pid = fork();
     if (pid == -1)
     {
-       perror("fork");
-       exit(EXIT_FAILURE);
+        perror("fork");
+        exit(EXIT_FAILURE);
     }
-    if (pid > 0)
-        ft_child(cmd1, file1, pipefd[1], pathname1, envp);
-    ft_parent(cmd2, file2, pipefd[0], pathname2, envp); 
+    if (pid == 0)
+        if (!ft_child(cmd1, infile, pipefd, pathname1, envp))
+            return (0);
+    waitpid(pid,&status, 0);
+    if (!ft_parent(cmd2, outfile, pipefd, pathname2, envp))
+        return (0);
+    return (1);
 }
 
 int main(int argc, char **argv, char **envp)
 {
     char    *cmd1;
     char    *cmd2;
-    char    *file1;
-    char    *file2;
+    int infile;
+    int outfile;
     char    **path;
 
 	int	i = 0; 
-    // if (argc != 5)
-    // {
-    //      write(2, "Error: 4 arguments needed in the form of: file1 cmd1 | cmd2 > file2\n", 68);
-    //      return (1);
-    // }
+    if (argc != 5)
+    {
+         write(2, "Error: 4 arguments needed in the form of: file1 cmd1 | cmd2 > file2\n", 68);
+         return (1);
+    }
     cmd1 = argv[2];
     cmd2 = argv[3];
-    file1 = argv[4];
-    file2 = argv[5];
-    path = ft_path(envp);
-    // while (*envp != NULL)
-    // {
-    //     printf("%s\n", *envp);
-    //     envp++;
-    // }
-    ft_pipex(cmd1, cmd2, file1, file2, path, envp);
+    infile = open(argv[1], O_RDONLY);
+    if (infile == -1)
+        return (1);
+    outfile = open(argv[4], O_WRONLY);
+    if (outfile == -1)
+        return (1);
+    // printf("HOLA\n");
+    path = ft_path(envp);   
+    ft_pipex(cmd1, cmd2, infile, outfile, path, envp);
 }
