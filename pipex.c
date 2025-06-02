@@ -89,10 +89,5 @@ int main(int argc, char **argv, char **envp)
     file1 = (char *)malloc(ft_strlen(argv[4]));
     file2 = (char *)malloc(ft_strlen(argv[5]));
     path = ft_path(envp);
-	while (path[i])
-	{
-		printf("%s\n", path[i]);
-		i++;
-	}
     ft_pipex(cmd1, cmd2, file1, file2, path);
 }
