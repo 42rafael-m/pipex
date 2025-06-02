@@ -19,7 +19,7 @@ char    **ft_path(char **envp)
     {
         s = ft_strstr(envp[i], "PATH");
         if (s && envp[i][0] == 'P')
-		    path = ft_split(envp[i] + 5, ':');
+            path = ft_split(envp[i] + 5, ':');
         i++;
     }
     return (path);
@@ -41,6 +41,14 @@ char *ft_access_path(char **path, char *cmd)
         t = ft_substr(cmd, 0, ft_strlen(cmd));
     if (!t)
         return (NULL);
+    if (ft_strchr(t, '/'))
+    {
+        if (access(t, F_OK) == -1)
+            return (perror("access"), free (t), t = NULL, NULL);
+        if (!access(t, X_OK))
+            return (t);
+        return (free(t), t = NULL, NULL);
+    }
     while (path[i])
     {
         s = ft_strjoin(path[i], "/");
@@ -56,7 +64,7 @@ char *ft_access_path(char **path, char *cmd)
         free(pathname);
         pathname = NULL;
         i++;
-    }  
+    } 
     return (free(t), t = NULL, NULL);
 }
 
@@ -68,16 +76,16 @@ int ft_child(char *cmd1, int infile, int *pipefd, char *pathname, char **envp)
     if (!argv)
         return (0);
     if(dup2(pipefd[1], STDOUT_FILENO) == -1)
-        return (perror("dup2"), 0);
+        return (perror("dup2"), free(pathname), ft_free_double_ptr(argv), 0);
     if(dup2(infile, STDIN_FILENO) == -1)
-        return (perror("dup2"), 0);
+        return (perror("dup2"), free(pathname), ft_free_double_ptr(argv), 0);
     if (close(pipefd[1]) == -1)
-        return (perror("close"), 0);
+        return (perror("close"), free(pathname), ft_free_double_ptr(argv), 0);
     if (close(pipefd[0]) == -1)
-        return (perror("close"), 0);
+        return (perror("close"), free(pathname), ft_free_double_ptr(argv), 0);
     if (execve(pathname, argv, envp) == -1)
-        return (perror("execve"), 0);
-    return (1);
+        return (perror("execve"), free(pathname), 0);
+    return (free(pathname), ft_free_double_ptr(argv), 1);
 }
 
 int ft_parent(char *cmd2, int outfile, int *pipefd, char *pathname, char **envp)
@@ -85,17 +93,19 @@ int ft_parent(char *cmd2, int outfile, int *pipefd, char *pathname, char **envp)
     char    **argv;
 
     argv = ft_split(cmd2, ' ');
+    if (!argv)
+        return (0);
     if(dup2(pipefd[0], STDIN_FILENO) == -1)
-        return (perror("dup2"), 0);
+        return (ft_free_double_ptr(argv), perror("dup2"), 0);
     if(dup2(outfile, STDOUT_FILENO) == -1)
-        return (perror("dup2"), 0);
+        return (ft_free_double_ptr(argv), perror("dup2"), 0);
     if (close(pipefd[1]) == -1)
-        return (perror("close"), 0);
+        return (ft_free_double_ptr(argv), perror("close"), 0);
     if (close(pipefd[0]) == -1)
-        return (perror("close"), 0);
-    if (execve(pathname, argv, envp))
-        return (perror("execve"), 0);
-    return (0);
+        return (ft_free_double_ptr(argv), perror("close"), 0);
+    if (execve(pathname, argv, envp) == -1)
+        return (ft_free_double_ptr(argv), perror("execve"), 0);
+    return (free(pathname), ft_free_double_ptr(argv),  1);
 }
 
 int ft_pipex(char *cmd1, char *cmd2, int infile, int outfile, char **path, char **envp)
@@ -107,25 +117,21 @@ int ft_pipex(char *cmd1, char *cmd2, int infile, int outfile, char **path, char 
     int status;
 
     pathname1 = ft_access_path(path, cmd1);
-    if (!pathname1)
-        return (write(2, "Command not found: ", 13), write(2, cmd1, ft_strlen(cmd1)), 0);
-    if (!pathname1)
-        return (write(2, "Command not found: ", 13), write(2, cmd1, ft_strlen(cmd1)), 0);
     pathname2 = ft_access_path(path, cmd2);
-    if (!(pathname1 || !pathname2))
-            return (0);
+    if (!pathname1)
+        return (write(2, "Command not found: ", 20), write(2, cmd1, ft_strlen(cmd1)), 0);
     if (pipe(pipefd) == -1)
-        return (perror("pipe"), 0);
+        return (perror("pipe"), free(pathname1), free(pathname2), 0);
     pid = fork();
     if (pid == -1)
-        return (perror("fork"), 0);
+        return (perror("fork"), free(pathname1), free(pathname2), 0);
     if (pid == 0)
         if (!ft_child(cmd1, infile, pipefd, pathname1, envp))
-            return (0);
+            return (free(pathname1), free(pathname2), 0);
     if (waitpid(pid,&status, 0) == -1)
-        return(write(2, "Can´t wait", 12), 0);
+        return(write(2, "Can´t wait", 12), free(pathname1), free(pathname2), 0);
     if (!ft_parent(cmd2, outfile, pipefd, pathname2, envp))
-        return (0);
+        return (free(pathname1), free(pathname2), 0);
     return (1);
 }
 
@@ -151,6 +157,6 @@ int main(int argc, char **argv, char **envp)
     if (!path)
         return (write(2, "Invalid path", 13), 1); 
     if ((!ft_pipex(cmd1, cmd2, infile, outfile, path, envp)))
-        return (1);
+        return (ft_free_double_ptr(path), 1);
     return (0);
 }
