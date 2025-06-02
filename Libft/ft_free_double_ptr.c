@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_double_ptr.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafael-m <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 18:07:55 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/02 18:11:49 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:18:32 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void	ft_free_double_ptr(char	**ptr)
 	i = 0;
 	if (!ptr)
 		return ;
-	while (*ptr)
+	while (ptr[i])
 	{
-		free (*ptr);
+		free (ptr[i]);
 		*ptr = NULL;
 		i++;
 	}

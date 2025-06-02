@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafael-m <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:02:35 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/02 19:02:38 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:17:43 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,16 +82,16 @@ int ft_child(char *cmd1, int infile, int *pipefd, char *pathname, char **envp)
     if (!argv)
         return (0);
     if(dup2(pipefd[1], STDOUT_FILENO) == -1)
-        return (perror("dup2"), free(pathname), ft_free_double_ptr(argv), 0);
+        return (perror("dup2"), ft_free_double_ptr(argv), 0);
     if(dup2(infile, STDIN_FILENO) == -1)
-        return (perror("dup2"), free(pathname), ft_free_double_ptr(argv), 0);
+        return (perror("dup2"), ft_free_double_ptr(argv), 0);
     if (close(pipefd[1]) == -1)
-        return (perror("close"), free(pathname), ft_free_double_ptr(argv), 0);
+        return (perror("close"), ft_free_double_ptr(argv), 0);
     if (close(pipefd[0]) == -1)
-        return (perror("close"), free(pathname), ft_free_double_ptr(argv), 0);
+        return (perror("close"), ft_free_double_ptr(argv), 0);
     if (execve(pathname, argv, envp) == -1)
         return (perror("execve"), free(pathname), 0);
-    return (free(pathname), ft_free_double_ptr(argv), 1);
+    return (ft_free_double_ptr(argv), 1);
 }
 
 int ft_parent(char *cmd2, int outfile, int *pipefd, char *pathname, char **envp)
@@ -111,7 +111,7 @@ int ft_parent(char *cmd2, int outfile, int *pipefd, char *pathname, char **envp)
         return (ft_free_double_ptr(argv), perror("close"), 0);
     if (execve(pathname, argv, envp) == -1)
         return (ft_free_double_ptr(argv), perror("execve"), 0);
-    return (free(pathname), ft_free_double_ptr(argv),  1);
+    return (ft_free_double_ptr(argv),  1);
 }
 
 int ft_pipex(char *cmd1, char *cmd2, int infile, int outfile, char **path, char **envp)
@@ -124,8 +124,8 @@ int ft_pipex(char *cmd1, char *cmd2, int infile, int outfile, char **path, char 
 
     pathname1 = ft_access_path(path, cmd1);
     pathname2 = ft_access_path(path, cmd2);
-    if (!pathname1)
-        return (write(2, "Command not found: ", 20), write(2, cmd1, ft_strlen(cmd1)), 0);
+    if (!pathname1 || !pathname2)
+        return (free(pathname1), free(pathname2), write(2, "Command not found: ", 20), write(2, cmd1, ft_strlen(cmd1)), 0);
     if (pipe(pipefd) == -1)
         return (perror("pipe"), free(pathname1), free(pathname2), 0);
     pid = fork();
