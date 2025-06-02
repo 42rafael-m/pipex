@@ -18,7 +18,7 @@ char    **ft_path(char **envp)
     {
         s = ft_strstr(envp[i], "PATH");
         if (s && envp[i][0] == 'P')
-			path = ft_split(envp[i] + 5, ':');
+		    path = ft_split(envp[i] + 5, ':');
         i++;
     }
     return (path);
@@ -27,34 +27,44 @@ char    **ft_path(char **envp)
 char *ft_access_path(char **path, char *cmd)
 {
     int i;
+    char    *s;
+    char    *t;
+    char    *pos;
     char    *pathname;
 
     i = 0;
+    pos = ft_strchr(cmd, ' ');
+    if (pos)
+        t = ft_substr(cmd, 0, pos - cmd);
+    else
+        t = ft_substr(cmd, 0, ft_strlen(cmd));
     while (path[i])
     {
-        pathname = ft_strjoin(path[i], cmd);
+        s = ft_strjoin(path[i], "/");
+        pathname = ft_strjoin(s, t);
+        //printf("pathname = %s\n", pathname);
+        free(s);
+        s = NULL;
+        //printf("access = %i\n", access(pathname, X_OK));
         if (!access(pathname, X_OK))
-            return(pathname);
+            return(free(t), t = NULL, pathname);
         free(pathname);
         pathname = NULL;
         i++;
     }
+    free(t);
+    t = NULL;
     return (NULL);
 }
 
-int ft_child(char *cmd1, char *file1, int writefd, char *pathname)
+int ft_child(char *cmd1, char *file1, int writefd, char *pathname, char **envp)
 {
-//     char buffer;
-//     ssize_t bytes_read;
-//     char    *path;
+    char buffer;
+    ssize_t bytes_read;
+    char    **argv;
 
-    
-//     execve(, );
-//     bytes_read = read(writefd, &buffer, 1);
-//     while (bytes_read > 0)
-//     {
-//         bytes_read = read(writefd, &buffer, 1);
-//     }
+    argv = ft_split(cmd1, ' ');
+    execve(pathname, argv, envp);
 }
 
 int ft_parent()
@@ -62,7 +72,7 @@ int ft_parent()
 
 }
 
-int ft_pipex(char *cmd1, char *cmd2, char *file1, char *file2, char **path)
+int ft_pipex(char *cmd1, char *cmd2, char *file1, char *file2, char **path, char **envp)
 {
     int pipefd[2];
     pid_t   pid;
@@ -85,9 +95,8 @@ int ft_pipex(char *cmd1, char *cmd2, char *file1, char *file2, char **path)
        exit(EXIT_FAILURE);
     }
     if (pid > 0)
-        ft_child(cmd1, file1, pipefd[1], pathname1);
-    if (pid == 0)
-        ft_parent(cmd2, file2, pipefd[0], pathname2); 
+        ft_child(cmd1, file1, pipefd[1], pathname1, envp);
+    ft_parent(cmd2, file2, pipefd[0], pathname2, envp); 
 }
 
 int main(int argc, char **argv, char **envp)
@@ -114,5 +123,5 @@ int main(int argc, char **argv, char **envp)
     //     printf("%s\n", *envp);
     //     envp++;
     // }
-    ft_pipex(cmd1, cmd2, file1, file2, path);
+    ft_pipex(cmd1, cmd2, file1, file2, path, envp);
 }
