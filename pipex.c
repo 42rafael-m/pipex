@@ -63,7 +63,7 @@ char *ft_access_path(char **path, char *cmd)
 int ft_child(char *cmd1, int infile, int *pipefd, char *pathname, char **envp)
 {
     char    **argv;
-    int status;
+
     argv = ft_split(cmd1, ' ');
     if (!argv)
         return (0);
@@ -81,13 +81,11 @@ int ft_child(char *cmd1, int infile, int *pipefd, char *pathname, char **envp)
 
 int ft_parent(char *cmd2, int outfile, int *pipefd, char *pathname, char **envp)
 {
-    int i = 0;
     char    **argv;
-    char buffer;
     int status;
 
+    status = 0;
     argv = ft_split(cmd2, ' ');
-
     if(dup2(pipefd[0], STDIN_FILENO) == -1)
         return (0);
     if(dup2(outfile, STDOUT_FILENO) == -1)
@@ -106,7 +104,6 @@ int ft_pipex(char *cmd1, char *cmd2, int infile, int outfile, char **path, char 
     char    *pathname1;
     char    *pathname2;
     int status;
-    int status2;
 
     pathname1 = ft_access_path(path, cmd1);
     pathname2 = ft_access_path(path, cmd2);
@@ -139,8 +136,7 @@ int main(int argc, char **argv, char **envp)
     int infile;
     int outfile;
     char    **path;
-
-	int	i = 0; 
+ 
     if (argc != 5)
     {
          write(2, "Error: 4 arguments needed in the form of: file1 cmd1 | cmd2 > file2\n", 68);
@@ -154,7 +150,6 @@ int main(int argc, char **argv, char **envp)
     outfile = open(argv[4], O_WRONLY);
     if (outfile == -1)
         return (1);
-    // printf("HOLA\n");
     path = ft_path(envp);   
     ft_pipex(cmd1, cmd2, infile, outfile, path, envp);
 }
