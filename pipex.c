@@ -43,7 +43,7 @@ char *ft_access_path(char **path, char *cmd)
 }
 
 int ft_child(char *cmd1, char *file1, int writefd, char *pathname)
-// {
+{
 //     char buffer;
 //     ssize_t bytes_read;
 //     char    *path;
@@ -55,7 +55,7 @@ int ft_child(char *cmd1, char *file1, int writefd, char *pathname)
 //     {
 //         bytes_read = read(writefd, &buffer, 1);
 //     }
-// }
+}
 
 int ft_parent()
 {
