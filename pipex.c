@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:02:35 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/03 13:58:58 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/03 14:11:19 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,70 +30,55 @@ char	**ft_path(char **envp)
 	return (path);
 }
 
-// char	*ft_path_cmd(char *cmd)
-// {
-// 	char	*pos;
-// 	char	*path_cmd;
+char	*ft_path_cmd(char *cmd)
+{
+	char	*pos;
+	char	*path_cmd;
 	
-// 	pos = ft_strchr(cmd, ' ');
-// 	if (pos)
-// 		path_cmd = ft_substr(cmd, 0, pos - cmd);
-// 	else
-// 		path_cmd = ft_substr(cmd, 0, ft_strlen(cmd));
-// 	if (!path_cmd)
-// 		return (NULL);
-// 	if (ft_strchr(path_cmd, '/'))
-// 	{
-// 		if (access(path_cmd, F_OK) == -1)
-// 			return (perror("access"), free (path_cmd), path_cmd = NULL, NULL);
-// 		if (!access(path_cmd, X_OK))
-// 			return (path_cmd);
-// 		return (free(path_cmd), path_cmd = NULL, NULL);
-// 	}
-// 	return (path_cmd);
-// }
+	pos = ft_strchr(cmd, ' ');
+	if (pos)
+		path_cmd = ft_substr(cmd, 0, pos - cmd);
+	else
+		path_cmd = ft_substr(cmd, 0, ft_strlen(cmd));
+	if (!path_cmd)
+		return (NULL);
+	if (ft_strchr(path_cmd, '/'))
+	{
+		if (access(path_cmd, F_OK) == -1)
+			return (perror("access"), free (path_cmd), path_cmd = NULL, NULL);
+		if (!access(path_cmd, X_OK))
+			return (path_cmd);
+		return (free(path_cmd), path_cmd = NULL, NULL);
+	}
+	return (path_cmd);
+}
 
 char	*ft_access_path(char **path, char *cmd)
 {
 	int	i;
 	char	*s;
-	char	*t;
-	char	*pos;
+	char	*p_cmd;
 	char	*pathname;
 
 	i = 0;
-	pos = ft_strchr(cmd, ' ');
-	if (pos)
-		t = ft_substr(cmd, 0, pos - cmd);
-	else
-		t = ft_substr(cmd, 0, ft_strlen(cmd));
-	if (!t)
-		return (NULL);
-	if (ft_strchr(t, '/'))
-	{
-		if (access(t, F_OK) == -1)
-			return (perror("access"), free (t), t = NULL, NULL);
-		if (!access(t, X_OK))
-			return (t);
-		return (free(t), t = NULL, NULL);
-	}
+	p_cmd = ft_path_cmd(cmd);
+	if (!p_cmd || ft_strchr(p_cmd, '/'))
+		return (p_cmd);
 	while (path[i])
 	{
-		s = ft_strjoin(path[i], "/");
+		s = ft_strjoin(path[i++], "/");
 		if (!s)
-			return (free(t), t = NULL, NULL);
-		pathname = ft_strjoin(s, t);
+			return (free(p_cmd), p_cmd = NULL, NULL);
+		pathname = ft_strjoin(s, p_cmd);
 		if (!pathname)
-			return (free(t), t = NULL, free(s), s = NULL, NULL);
+			return (free(p_cmd), p_cmd = NULL, free(s), s = NULL, NULL);
 		free(s);
 		s = NULL;
 		if (!access(pathname, X_OK))
-			return(free(t), t = NULL, free(s), s = NULL, pathname);
+			return(free(p_cmd), p_cmd = NULL, free(s), s = NULL, pathname);
 		free(pathname);
-		pathname = NULL;
-		i++;
 	}
-	return (free(t), t = NULL, NULL);
+	return (free(p_cmd), p_cmd = NULL, NULL);
 }
 
 int	ft_child(char *cmd1, int infile, int *pipefd, char *pathname, char **envp)
@@ -139,7 +124,7 @@ int	ft_parent(char *cmd2, int outfile, int *pipefd, char *pathname, char **envp)
 int	ft_access_file(char **envp, char *file)
 {
 	int	i;
-	char	*t;
+	char	*p_cmd;
 	char	*s;
 	char	*file_path;
 
@@ -148,8 +133,8 @@ int	ft_access_file(char **envp, char *file)
 	{
 		if (ft_strstr(envp[i], "PWD") && !ft_strstr(envp[i], "OLDPWD"))
 		{
-			t = envp[i];
-			s = ft_strjoin(t + 4, "/");
+			p_cmd = envp[i];
+			s = ft_strjoin(p_cmd + 4, "/");
 			file_path = ft_strjoin(s, file);
 			free(s);
 			if (!access(file_path, F_OK))	
