@@ -25,11 +25,11 @@ void	ft_putstr_non_printable(char *str)
 	while (*str)
 	{
 		c = (unsigned char)*str;
-		if (*str < 32 || *str == 127)
+		if (c < 32 || c == 127)
 		{
 			write(1, "\\", 1);
-			ft_putchar(hex[(*str / 16)]);
-			ft_putchar(hex[(*str % 16)]);
+			ft_putchar(hex[(c / 16)]);
+			ft_putchar(hex[(c % 16)]);
 		}
 		else
 			write(1, str, 1);
