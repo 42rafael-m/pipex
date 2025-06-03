@@ -16,7 +16,7 @@ SRC = ft_atoi.c ft_isascii.c ft_memcmp.c \
       ft_strstr.c ft_convert_int.c ft_putnbr_base.c ft_longlen.c\
       ft_atoi_base.c ft_power.c ft_iterative_factorial.c\
       ft_fibonacci.c ft_convert_base.c ft_nbr_base_len.c\
-      ft_neg.c ft_putnbr.c ft_free_double_ptr.c
+      ft_neg.c ft_putnbr.c ft_free_d.c
 
 BONUS_SRC = ft_lstadd_front_bonus.c ft_lstsize_bonus.c ft_lstclear_bonus.c\
 	ft_lstlast_bonus.c ft_lstadd_back_bonus.c ft_lstnew_bonus.c\

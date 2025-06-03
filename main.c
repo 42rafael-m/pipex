@@ -50,10 +50,8 @@ int main(int argc, char **argv, char **envp)
     // printf("%d\n", i);
     // open("borrar", O_CREAT  | O_WRONLY, 0644);
     int i = 0;
-    while (envp[i++])
-    {
-        printf("%s\n", envp[i]);
-    }
+    while (envp[i])
+        printf("%s\n", envp[i++]);
     // path = ft_path(envp);
     // printf("%s\n", path);
     // ssize_t size;
