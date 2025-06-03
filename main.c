@@ -46,14 +46,14 @@ char    *ft_path(char **envp)
 
 int main(int argc, char **argv, char **envp)
 {
-    int  i = access("/home/rafael-m/Documents/42/Cursus/pipex/input", F_OK);
-    printf("%d\n", i);
+    // int  i = access("/home/rafael-m/Documents/42/Cursus/pipex/input", F_OK);
+    // printf("%d\n", i);
     // open("borrar", O_CREAT  | O_WRONLY, 0644);
-    // int i = 0;
-    // while (envp[i++])
-    // {
-    //     printf("%s\n", envp[i]);
-    // }
+    int i = 0;
+    while (envp[i++])
+    {
+        printf("%s\n", envp[i]);
+    }
     // path = ft_path(envp);
     // printf("%s\n", path);
     // ssize_t size;

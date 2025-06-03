@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:02:35 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/03 12:53:49 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:58:58 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,29 @@ char	**ft_path(char **envp)
 	}
 	return (path);
 }
+
+// char	*ft_path_cmd(char *cmd)
+// {
+// 	char	*pos;
+// 	char	*path_cmd;
+	
+// 	pos = ft_strchr(cmd, ' ');
+// 	if (pos)
+// 		path_cmd = ft_substr(cmd, 0, pos - cmd);
+// 	else
+// 		path_cmd = ft_substr(cmd, 0, ft_strlen(cmd));
+// 	if (!path_cmd)
+// 		return (NULL);
+// 	if (ft_strchr(path_cmd, '/'))
+// 	{
+// 		if (access(path_cmd, F_OK) == -1)
+// 			return (perror("access"), free (path_cmd), path_cmd = NULL, NULL);
+// 		if (!access(path_cmd, X_OK))
+// 			return (path_cmd);
+// 		return (free(path_cmd), path_cmd = NULL, NULL);
+// 	}
+// 	return (path_cmd);
+// }
 
 char	*ft_access_path(char **path, char *cmd)
 {
@@ -128,6 +151,7 @@ int	ft_access_file(char **envp, char *file)
 			t = envp[i];
 			s = ft_strjoin(t + 4, "/");
 			file_path = ft_strjoin(s, file);
+			free(s);
 			if (!access(file_path, F_OK))	
 				return (free(file_path), 1);
 			return (free(file_path), 0);
@@ -144,24 +168,24 @@ int	ft_pipex(char *cmd1, char *cmd2, int infile, int outfile, char **path, char 
 	char	*pathname1;
 	char	*pathname2;
 	int	status;
-
+	
 	pathname1 = ft_access_path(path, cmd1);
 	pathname2 = ft_access_path(path, cmd2);
 	if (!pathname1 || !pathname2)
-		return (printf("HOLA"), free(pathname1), free(pathname2), write(2, "Command not found: ", 20), write(2, cmd1, ft_strlen(cmd1)), 0);
+		return (free(pathname1), free(pathname2), close(infile), close(outfile), write(2, "Command not found: ", 20), write(2, cmd1, ft_strlen(cmd1)), 0);
 	if (pipe(pipefd) == -1)
-		return (perror("pipe"), free(pathname1), free(pathname2), 0);
+		return (close(infile), close(outfile), perror("pipe"), free(pathname1), free(pathname2), 0);
 	pid = fork();
 	if (pid == -1)
-		return (perror("fork"), free(pathname1), free(pathname2), 0);
+		return (close(infile), close(outfile), perror("fork"), free(pathname1), free(pathname2), 0);
 	if (pid == 0)
-	if (!ft_child(cmd1, infile, pipefd, pathname1, envp))
-		return (free(pathname1), free(pathname2), 0);
-	if (waitpid(pid,&status, 0) == -1)
-		return(write(2, "Can´t wait", 12), free(pathname1), free(pathname2), 0);
+		if (!ft_child(cmd1, infile, pipefd, pathname1, envp))
+			return (close(infile), close(outfile), free(pathname1), free(pathname2), 0);
+	if (waitpid(pid, &status, 0) == -1)
+		return(close(infile), close(outfile), write(2, "Can´t wait", 12), free(pathname1), free(pathname2), 0);
 	if (!ft_parent(cmd2, outfile, pipefd, pathname2, envp))
 		return (free(pathname1), free(pathname2), 0);
-	return (free(pathname1), free(pathname2),1);
+	return (close(infile), close(outfile), free(pathname1), free(pathname2),1);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -178,13 +202,12 @@ int	main(int argc, char **argv, char **envp)
 		return (perror("access"), 1);
 	if (!ft_access_file(envp, argv[4]))
 		status++;
-	printf("HOLA");
 	infile = open(argv[1], O_RDONLY);
 	if (infile == -1)
-		return (perror("open"), 1);
-	outfile = open(argv[4], O_CREAT | O_WRONLY, 0644);
+		return (perror("open"), errno);
+	outfile = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (outfile == -1)
-		return (perror("open"), 1);
+		return (close(infile), perror("open"), 1);
 	path = ft_path(envp);
 	if (!path)
 		return (write(2, "Invalid path", 13), 1); 
