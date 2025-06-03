@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:02:35 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/02 19:17:43 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/03 12:53:49 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,30 @@ int	ft_parent(char *cmd2, int outfile, int *pipefd, char *pathname, char **envp)
 	return (ft_free_double_ptr(argv),  1);
 }
 
+int	ft_access_file(char **envp, char *file)
+{
+	int	i;
+	char	*t;
+	char	*s;
+	char	*file_path;
+
+	i = 0;
+	while (envp[i])
+	{
+		if (ft_strstr(envp[i], "PWD") && !ft_strstr(envp[i], "OLDPWD"))
+		{
+			t = envp[i];
+			s = ft_strjoin(t + 4, "/");
+			file_path = ft_strjoin(s, file);
+			if (!access(file_path, F_OK))	
+				return (free(file_path), 1);
+			return (free(file_path), 0);
+		}
+		i++;
+	}
+	return (0);
+}
+
 int	ft_pipex(char *cmd1, char *cmd2, int infile, int outfile, char **path, char **envp)
 {
 	int	pipefd[2];
@@ -124,7 +148,7 @@ int	ft_pipex(char *cmd1, char *cmd2, int infile, int outfile, char **path, char 
 	pathname1 = ft_access_path(path, cmd1);
 	pathname2 = ft_access_path(path, cmd2);
 	if (!pathname1 || !pathname2)
-		return (free(pathname1), free(pathname2), write(2, "Command not found: ", 20), write(2, cmd1, ft_strlen(cmd1)), 0);
+		return (printf("HOLA"), free(pathname1), free(pathname2), write(2, "Command not found: ", 20), write(2, cmd1, ft_strlen(cmd1)), 0);
 	if (pipe(pipefd) == -1)
 		return (perror("pipe"), free(pathname1), free(pathname2), 0);
 	pid = fork();
@@ -142,26 +166,29 @@ int	ft_pipex(char *cmd1, char *cmd2, int infile, int outfile, char **path, char 
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	*cmd1;
-	char	*cmd2;
 	int	infile;
 	int	outfile;
 	char	**path;
+	int	status;
  
+	status = 0;
 	if (argc != 5)    
 		return (write(2, "Error: expected 4 arguments: file1 cmd1 | cmd2 > file2\n", 56), 1);
-	cmd1 = argv[2];
-	cmd2 = argv[3];
+	if (!ft_access_file(envp, argv[1]))
+		return (perror("access"), 1);
+	if (!ft_access_file(envp, argv[4]))
+		status++;
+	printf("HOLA");
 	infile = open(argv[1], O_RDONLY);
 	if (infile == -1)
 		return (perror("open"), 1);
-	outfile = open(argv[4], O_WRONLY);
+	outfile = open(argv[4], O_CREAT | O_WRONLY, 0644);
 	if (outfile == -1)
 		return (perror("open"), 1);
 	path = ft_path(envp);
 	if (!path)
 		return (write(2, "Invalid path", 13), 1); 
-	if ((!ft_pipex(cmd1, cmd2, infile, outfile, path, envp)))
+	if ((!ft_pipex(argv[2], argv[3], infile, outfile, path, envp)))
 		return (ft_free_double_ptr(path), 1);
-	return (ft_free_double_ptr(path), 0);
+	return (ft_free_double_ptr(path), status);
 }
