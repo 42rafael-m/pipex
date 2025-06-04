@@ -1,0 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/02 19:03:00 by rafael-m          #+#    #+#             */
+/*   Updated: 2025/06/02 19:08:51 by rafael-m         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef PIPEX_H
+# define PIPEX_H
+
+#include <stdio.h>
+#include "libft.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <sys/wait.h>
+
+#endif
