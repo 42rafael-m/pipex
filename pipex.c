@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 15:48:27 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/04 19:08:00 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/04 19:27:19 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,6 +255,13 @@ t_pipex	*ft_load_node(char	*inf, char *outf, char *cmd1, char *cmd2)
 	return (pipex);
 }
 
+void ft_write_cmd_error(char *cmd)
+{
+	if (cmd)
+		write(2, cmd, ft_strlen(cmd));
+	write(2, ": Command not found\n", 20);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	*pipex;
@@ -270,10 +277,10 @@ int	main(int argc, char **argv, char **envp)
 		perror("access");
 	pipex -> cmd1_path = ft_parse_cmd(pipex -> cmd1, envp);
 	if (access(pipex -> cmd1_path, X_OK) == -1)
-		perror("access");
+		ft_write_cmd_error(argv[2]);
 	pipex -> cmd2_path = ft_parse_cmd(pipex -> cmd2, envp);
 	if (access(pipex -> cmd2_path, X_OK) == -1)
-		perror("access");
+		ft_write_cmd_error(argv[1]);
 	ft_pipe_fork(pipex, envp);
 	ft_free_node(pipex);
 	return (errno);
