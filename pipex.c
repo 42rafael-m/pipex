@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 15:48:27 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/04 18:54:49 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/04 19:08:00 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_error_exit(char *error)
 	exit(errno);
 }
 
-int	ft_parent(t_pipex *pipex, int pipefd, char **envp)
+int	ft_parent(t_pipex *pipex, int *pipefd, char **envp)
 {
 	int		outfd;
 	char	**argv;
@@ -45,13 +45,15 @@ int	ft_parent(t_pipex *pipex, int pipefd, char **envp)
 	outfd = open(pipex -> outfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (outfd == -1)
 		ft_error_exit("open");
-	if (dup2(pipefd, STDIN_FILENO) == -1)
-		ft_error_exit("dup2");
-	if (close(pipefd) == -1)
-		ft_error_exit("close");
 	if (dup2(outfd, STDOUT_FILENO) == -1)
 		ft_error_exit("dup2");
 	if (close(outfd) == -1)
+		ft_error_exit("close");
+	if (dup2(pipefd[0], STDIN_FILENO) == -1)
+		ft_error_exit("dup2");
+	if (close(pipefd[0]) == -1)
+		ft_error_exit("close");
+	if (close(pipefd[1]) == -1)
 		ft_error_exit("close");
 	argv = ft_split(pipex -> cmd2, ' ');
 	if (!argv)
@@ -70,7 +72,7 @@ void ft_free_child(t_pipex *pipex)
 		free(pipex -> infile);
 }
 
-int	ft_child(t_pipex *pipex, int pipefd, char **envp)
+int	ft_child(t_pipex *pipex, int *pipefd, char **envp)
 {
 	int		infd;
 	char	**argv;
@@ -82,9 +84,11 @@ int	ft_child(t_pipex *pipex, int pipefd, char **envp)
 		ft_error_exit("dup2");
 	if (close(infd) == -1)
 		ft_error_exit("close");
-	if (dup2(pipefd, STDOUT_FILENO) == -1)
+	if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 		ft_error_exit("dup2");
-	if (close(pipefd) == -1)
+	if (close(pipefd[1]) == -1)
+		ft_error_exit("close");
+	if (close(pipefd[0]) == -1)
 		ft_error_exit("close");
 	argv = ft_split(pipex -> cmd1, ' ');
 	if (!argv)
@@ -108,13 +112,11 @@ int	ft_pipe_fork(t_pipex *pipex, char **envp)
 	if (pid == -1)
 		ft_error_exit("fork"), exit(errno);
 	if (pid == 0 && pipex -> cmd1)
-		ft_child(pipex, pipefd[1], envp);
+		ft_child(pipex, pipefd, envp);
 	if (wait(&status) == -1)
 		ft_error_exit("wait");
-	if (close(pipefd[1]) == -1)
-		ft_error_exit("close");
 	if (pipex -> cmd2)
-		ft_parent(pipex, pipefd[0], envp);
+		ft_parent(pipex, pipefd, envp);
 	return (errno);
 }
 
