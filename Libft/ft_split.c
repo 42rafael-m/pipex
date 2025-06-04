@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafael-m <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 12:34:44 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/04/19 16:16:05 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/04 11:56:23 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	**ft_split(char *str, char charset)
 	int		i;
 
 	i = 0;
-	if (!str)
+	if (!str || !charset)
 		return (NULL);
 	depth = ft_depth(str, charset);
 	result = (char **)malloc((depth + 1) * sizeof(char *));
