@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:03:00 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/04 15:17:45 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/04 16:43:24 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ typedef struct s_pipex
     char    *cmd2_path;
     char    *infile;
     char    *outfile;
-    char    **envp;
 }   t_pipex;
 
 #endif
