@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 15:48:27 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/04 17:52:43 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:15:34 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@ void	ft_free_node(t_pipex *pipex)
 		free(pipex -> cmd2_path);
 	free(pipex);
 	pipex = NULL;
+}
+
+void ft_error_exit(char *error)
+{
+	perror(error);
+	exit(errno);
 }
 
 int	ft_parent(t_pipex *pipex, int pipefd, char **envp)
@@ -60,18 +66,21 @@ int	ft_child(t_pipex *pipex, int pipefd, char **envp)
 
 	infd = open(pipex -> infile, O_RDONLY);
 	if (infd == -1)
-		perror("open");
+		ft_error_exit("open");
 	if (dup2(infd, STDIN_FILENO) == -1)
-		perror("dup2");
-	close(infd);
+		ft_error_exit("dup2");
+	if (close(infd) == -1)
+		ft_error_exit("close");
 	if (dup2(pipefd, STDOUT_FILENO) == -1)
-		perror("dup2");
-	close(pipefd);
+		ft_error_exit("dup2");
+	if (close(pipefd) == -1)
+		ft_error_exit("close");
 	argv = ft_split(pipex -> cmd1, ' ');
 	if (!argv)
-		return (perror("malloc"), errno);
-	if (execve(pipex -> cmd1_path, argv, envp) == -1)
-		perror("execve");
+		ft_error_exit("malloc");
+	execve(pipex -> cmd1_path, argv, envp);
+	ft_free_d(argv);
+	ft_error_exit("execve");
 	return (ft_free_d(argv), errno);
 }
 
@@ -82,15 +91,16 @@ int	ft_pipe_fork(t_pipex *pipex, char** envp)
 	int	status;
 
 	if (pipe(pipefd) == -1)
-		perror("pipe");
+		ft_error_exit("pipe");
 	pid = fork();
 	if (pid == -1)
-		perror("fork"), exit(errno);
+		ft_error_exit("fork"), exit(errno);
 	if (pid == 0 && pipex -> cmd1)
 		ft_child(pipex, pipefd[1], envp);
 	if (waitpid(pid, &status, 0) == -1)
-		perror("wait");
-	close(pipefd[1]);
+		ft_error_exit("wait");
+	if (close(pipefd[1]) == -1)
+		ft_error_exit("close");
 	if (pipex -> cmd2)
 		ft_parent(pipex, pipefd[0], envp);
 	return (errno);
