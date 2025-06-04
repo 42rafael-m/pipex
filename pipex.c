@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 15:48:27 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/04 16:45:36 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/04 17:52:43 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,10 +244,10 @@ int	main(int argc, char **argv, char **envp)
 		return(perror("access"), errno);
 	if (ft_parse_file(pipex -> outfile, envp, W_OK) == -1)
 		perror("access");
-	pipex -> cmd1_path = ft_parse_cmd(pipex -> cmd1_path, envp);
+	pipex -> cmd1_path = ft_parse_cmd(pipex -> cmd1, envp);
 	if (access(pipex -> cmd1_path, X_OK) == -1)
 		perror("access");
-	pipex -> cmd2_path = ft_parse_cmd(pipex -> cmd1_path, envp);
+	pipex -> cmd2_path = ft_parse_cmd(pipex -> cmd2, envp);
 	if (access(pipex -> cmd2_path, X_OK) == -1)
 		perror("access");
 	ft_pipe_fork(pipex, envp);
