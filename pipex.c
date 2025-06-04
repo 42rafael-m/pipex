@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 15:48:27 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/04 18:15:34 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:23:52 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	ft_free_node(t_pipex *pipex)
 	pipex = NULL;
 }
 
-void ft_error_exit(char *error)
+void	ft_error_exit(char *error)
 {
 	perror(error);
 	exit(errno);
@@ -39,7 +39,7 @@ void ft_error_exit(char *error)
 
 int	ft_parent(t_pipex *pipex, int pipefd, char **envp)
 {
-	int	outfd;
+	int		outfd;
 	char	**argv;
 
 	outfd = open(pipex -> outfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
@@ -61,7 +61,7 @@ int	ft_parent(t_pipex *pipex, int pipefd, char **envp)
 
 int	ft_child(t_pipex *pipex, int pipefd, char **envp)
 {
-	int	infd;
+	int		infd;
 	char	**argv;
 
 	infd = open(pipex -> infile, O_RDONLY);
@@ -84,7 +84,7 @@ int	ft_child(t_pipex *pipex, int pipefd, char **envp)
 	return (ft_free_d(argv), errno);
 }
 
-int	ft_pipe_fork(t_pipex *pipex, char** envp)
+int	ft_pipe_fork(t_pipex *pipex, char **envp)
 {
 	int	pipefd[2];
 	int	pid;
