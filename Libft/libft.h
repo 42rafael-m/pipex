@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 20:27:40 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/03 18:40:15 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/05 11:41:53 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ char		*ft_substr(char const *s, unsigned int start, size_t len);
 int			ft_tolower(int c);
 int			ft_toupper(int c);
 void		ft_swap(int *a, int *b);
-void			ft_rev_int_tab(int *tab, size_t size);
-void			ft_sort_int_tab(int *tab, size_t size);
+void		ft_rev_int_tab(int *tab, size_t size);
+void		ft_sort_int_tab(int *tab, size_t size);
 
 typedef struct s_list
 {
@@ -78,17 +78,17 @@ void		ft_putchar(char c);
 char		*ft_strstr(const char *str, const char *to_find);
 size_t		ft_longlen(long n);
 void		ft_putnbr_base(long nbr, char *base);
-int		ft_atoi_base(char *str, char *base);
-int		ft_power(int base, int power);
-int		ft_iterative_factorial(int nb);
-int		ft_fibonacci(int index);
+int			ft_atoi_base(char *str, char *base);
+int			ft_power(int base, int power);
+int			ft_iterative_factorial(int nb);
+int			ft_fibonacci(int index);
 char		*ft_convert_base(char *nbr, char *base_from, char *base_to);
 char		*ft_convert_int(long nbr, char *base);
-int		ft_nbr_base_len(long nbr, size_t base_len);
-int		ft_neg(long n);
+int			ft_nbr_base_len(long nbr, size_t base_len);
+int			ft_neg(long n);
 void		ft_rev_char_tab(char *tab);
 void		ft_putnbr(int n);
-char    *ft_strndup(const char *src, size_t n);
-void    ft_free_d(char **ptr);
+char		*ft_strndup(const char *src, size_t n);
+void		ft_free_d(char **ptr);
 
 #endif

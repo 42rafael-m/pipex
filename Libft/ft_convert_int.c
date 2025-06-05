@@ -6,7 +6,7 @@
 /*   By: rafael-m <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:15:13 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/04/22 15:00:25 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/05 12:10:01 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ static int	ft_errors(char *base)
 
 char	*ft_convert_int(long nbr, char *base)
 {
-	size_t		base_len;
-	int		nbr_len;
 	unsigned char	*result;
+	size_t			base_len;
+	int				nbr_len;
 
 	if (!base || ft_errors(base))
 		return (NULL);

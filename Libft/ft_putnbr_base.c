@@ -6,7 +6,7 @@
 /*   By: rafael-m <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:05:29 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/04/22 15:19:16 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/05 12:04:00 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
  * este número en forma de un int y la base en forma de un string. La base
  * contiene todos los símbolos que se pueden utilizar para mostrar el número.
  *
- * Si un parámetro contiene un error la función no muestra nada. Un error puede ser:
+ * Si un parámetro contiene un error la función no muestra nada.
+ * Un error puede ser:
 	◦ la base está vacía o su tamaño es 1;
 	◦ la base contiene dos veces el mismo carácter;
 	◦ la base contiene los caracteres + o - */
@@ -25,7 +26,7 @@ static int	ft_errors(char *base)
 {
 	unsigned int	i;
 	unsigned int	j;
-	size_t		base_len;
+	size_t			base_len;
 
 	i = 0;
 	j = 0;
@@ -50,10 +51,10 @@ static int	ft_errors(char *base)
 
 void	ft_putnbr_base(long nbr, char *base)
 {
-	size_t		base_len;
-	int		nbr_len;
+	size_t			base_len;
+	int				nbr_len;
 	unsigned char	*result;
-	int	neg;
+	int				neg;
 
 	if (!base || ft_errors(base))
 		return ;

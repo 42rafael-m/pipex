@@ -6,7 +6,7 @@
 /*   By: rafael-m <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 16:41:05 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/04/22 12:31:39 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/05 12:11:16 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,13 @@ static int	ft_errors(char *base)
 	return (0);
 }
 
-char *ft_convert_base(char *nbr, char *base_from, char *base_to)
+char	*ft_convert_base(char *nbr, char *base_from, char *base_to)
 {
-	int	num;
+	int		num;
 	char	*result;
-    
+
 	if (ft_errors(base_from) || ft_errors(base_to))
-		return NULL;
+		return (NULL);
 	num = ft_atoi_base(nbr, base_from);
 	result = ft_convert_int(num, base_to);
 	return (result);

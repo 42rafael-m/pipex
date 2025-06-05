@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi_base.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafael-m <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:22:59 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/04/22 12:47:52 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/05 12:14:28 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 	◦ la base contiene dos veces el mismo carácter;
 	◦ la base contiene los caracteres + o - o espacios; */
 
-static int	ft_pos_in_base(char pos, char *base)
+static int	ft_pos(char pos, char *base)
 {
 	int	lg;
 	int	i;
@@ -64,34 +64,42 @@ static int	ft_errors(char *base)
 	return (0);
 }
 
-int	ft_atoi_base(char *str, char *base)
+static int	ft_sign(int *index, int *lg, char first_pos)
 {
-	int	result;
-	int	i;
-	int	size_base;
-	int	lg;
 	int	sign;
 
 	sign = 1;
-	i = 0;
-	result = 0;
-	if (!base || ft_errors(base) || !str)
-		return (0);
-	size_base = ft_strlen(base);
-	lg = ft_strlen(str) - 1;
-	if (str[0] == '-')
+	if (first_pos == '-')
 	{
-		i++;
-		lg--;
+		(*index)++;
+		(*lg)--;
 		sign = -1;
 	}
+	return (sign);
+}
+
+int	ft_atoi_base(char *str, char *base)
+{
+	int	r;
+	int	i;
+	int	size_b;
+	int	lg;
+	int	sign;
+
+	i = 0;
+	r = 0;
+	if (!base || ft_errors(base) || !str)
+		return (0);
+	size_b = ft_strlen(base);
+	lg = ft_strlen(str) - 1;
+	sign = ft_sign(&i, &lg, str[0]);
 	while (str[i] && lg >= 0)
 	{
-		if (ft_pos_in_base(str[i], base) == -1)
+		if (ft_pos(str[i], base) == -1)
 			return (0);
-		result = result + (ft_pos_in_base(str[i], base)) * (ft_power(size_base, lg));
+		r = r + (ft_pos(str[i], base)) * (ft_power(size_b, lg));
 		i++;
 		lg--;
 	}
-	return (result * sign);
+	return (r * sign);
 }

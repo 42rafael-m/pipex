@@ -6,7 +6,7 @@
 /*   By: rafael-m <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 11:29:22 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/04/30 11:29:33 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/05 12:01:36 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,15 @@
 #include "libft.h"
 #include <string.h>
 
-char    *ft_strndup(const char *src, size_t n)
+char	*ft_strndup(const char *src, size_t n)
 {
-        char            *dest;
+	char	*dest;
 
-        dest = (char *)malloc((n + 1) * sizeof(char));
-        if (!dest)
-                return (NULL);
-        ft_strlcpy(dest, src, n + 1);
-        return (dest);
+	dest = (char *)malloc((n + 1) * sizeof(char));
+	if (!dest)
+		return (NULL);
+	ft_strlcpy(dest, src, n + 1);
+	return (dest);
 }
 /*
 int main(void)
