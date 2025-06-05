@@ -13,7 +13,7 @@
 #include "libft.h"
 #include "pipex.h"
 
-int	ft_parent(t_pipex *pipex, int *pipefd, char **envp)
+int	ft_child_out(t_pipex *pipex, int *pipefd, char **envp)
 {
 	int		outfd;
 	char	**argv;
@@ -36,7 +36,8 @@ int	ft_parent(t_pipex *pipex, int *pipefd, char **envp)
 		ft_error_exit("malloc");
 	execve(pipex -> cmd2_path, argv, envp);
 	perror("execve");
-	return (ft_free_d(argv), errno);
+	ft_free_d(argv);
+	exit(errno);
 }
 
 void	ft_free_child(t_pipex *pipex)
@@ -49,7 +50,7 @@ void	ft_free_child(t_pipex *pipex)
 		free(pipex -> infile);
 }
 
-int	ft_child(t_pipex *pipex, int *pipefd, char **envp)
+int	ft_child_in(t_pipex *pipex, int *pipefd, char **envp)
 {
 	int		infd;
 	char	**argv;
@@ -81,6 +82,7 @@ int	ft_pipe_fork(t_pipex *pipex, char **envp)
 {
 	int	pipefd[2];
 	int	pid;
+	int	pid2;
 	int	status;
 
 	if (pipe(pipefd) == -1)
@@ -88,39 +90,20 @@ int	ft_pipe_fork(t_pipex *pipex, char **envp)
 	pid = fork();
 	if (pid == -1)
 		ft_error_exit("fork");
-	if (pid == 0 && pipex -> cmd1)
-		ft_child(pipex, pipefd, envp);
-	if (wait(&status) == -1)
+	if (pid == 0 /*&& pipex -> cmd1*/)
+		ft_child_in(pipex, pipefd, envp);
+	pid2 = fork();
+	if (pid2 == -1)
+		ft_error_exit("fork");
+	if (pid2 == 0/* && pipex -> cmd2*/)
+		ft_child_out(pipex, pipefd, envp);
+	if (close(pipefd[1]) == -1)
+		ft_error_exit("close");
+	if (close(pipefd[0]) == -1)
+		ft_error_exit("close");
+	if (waitpid(pid, &status, 0) == -1)
 		ft_error_exit("wait");
-	if (pipex -> cmd2)
-		ft_parent(pipex, pipefd, envp);
+	if (waitpid(pid2, &status, 0) == -1)
+		ft_error_exit("wait");
 	return (errno);
-}
-
-char	*ft_cmd_path(char *env_path, char *cmd)
-{
-	int		i;
-	char	**path;
-	char	*cmd_path;
-	char	*t;
-
-	i = 0;
-	path = ft_split(env_path, ':');
-	if (!path)
-		return (perror("malloc"), NULL);
-	while (path[i])
-	{
-		t = ft_strjoin(path[i], "/");
-		if (!t)
-			return (ft_free_d(path), perror("malloc"), NULL);
-		cmd_path = ft_strjoin(t, cmd);
-		free(t);
-		if (!cmd_path)
-			return (ft_free_d(path), perror("malloc"), NULL);
-		if (!access(cmd_path, X_OK))
-			return (ft_free_d(path), cmd_path);
-		free(cmd_path);
-		i++;
-	}
-	return (ft_free_d(path), NULL);
 }

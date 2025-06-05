@@ -32,7 +32,8 @@ typedef struct s_pipex
 }	t_pipex;
 
 int		ft_parent(t_pipex *pipex, int *pipefd, char **envp);
-void	ft_free_child(t_pipex *pipex);
+void	ft_free_child_in(t_pipex *pipex);
+void	ft_free_child_out(t_pipex *pipex);
 int		ft_child(t_pipex *pipex, int *pipefd, char **envp);
 int		ft_pipe_fork(t_pipex *pipex, char **envp);
 char	*ft_cmd_path(char *env_path, char *cmd);

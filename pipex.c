@@ -13,6 +13,34 @@
 #include "libft.h"
 #include "pipex.h"
 
+char	*ft_cmd_path(char *env_path, char *cmd)
+{
+	int		i;
+	char	**path;
+	char	*cmd_path;
+	char	*t;
+
+	i = 0;
+	path = ft_split(env_path, ':');
+	if (!path)
+		return (perror("malloc"), NULL);
+	while (path[i])
+	{
+		t = ft_strjoin(path[i], "/");
+		if (!t)
+			return (ft_free_d(path), perror("malloc"), NULL);
+		cmd_path = ft_strjoin(t, cmd);
+		free(t);
+		if (!cmd_path)
+			return (ft_free_d(path), perror("malloc"), NULL);
+		if (!access(cmd_path, X_OK))
+			return (ft_free_d(path), cmd_path);
+		free(cmd_path);
+		i++;
+	}
+	return (ft_free_d(path), NULL);
+}
+
 static char	*ft_parse_cmd(char *cmd, char **env)
 {
 	char	*cmd_path;
