@@ -110,7 +110,7 @@ char	*ft_cmd_path(char *env_path, char *cmd)
 		return (perror("malloc"), NULL);
 	while (path[i])
 	{
-		t = ft_strjoin(path[i] + 5, "/");
+		t = ft_strjoin(path[i], "/");
 		if (!t)
 			return (ft_free_d(path), perror("malloc"), NULL);
 		cmd_path = ft_strjoin(t, cmd);
