@@ -6,50 +6,28 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 15:48:27 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/05 15:01:06 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/05 15:27:30 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "pipex.h"
 
-char	*ft_cmd_s(char *cmd, char **env)
-{
-	char	*pos;
-	char	*cmd_s;
-	char	*r;
-
-	pos = ft_strchr(cmd, ' ');
-	if (pos)
-		cmd_s = ft_substr(cmd, 0, pos - cmd);
-	else
-		cmd_s = ft_substr(cmd, 0, ft_strlen(cmd));
-	if (!cmd_s)
-		return (perror("malloc"), NULL);
-	if (ft_strchr(cmd_s, '/'))
-	{
-		r = ft_parse_pwd(cmd, env);
-		if (!r)
-			return (free(cmd_s), perror("malloc"), NULL);
-		return (free(cmd_s), r);
-	}
-	return (cmd_s);
-}
-
-char	*ft_parse_cmd(char *cmd, char **env)
+static char	*ft_parse_cmd(char *cmd, char **env)
 {
 	char	*cmd_path;
 	char	*cmd_s;
 	int		i;
 
 	i = 0;
-	if (cmd && cmd[0] == '/')
+	if (cmd && ft_strchr(cmd, '/'))
 		return (cmd);
-	cmd_s = ft_cmd_s(cmd, env);
+	if (cmd && ft_strchr(cmd, ' '))
+		cmd_s = ft_substr(cmd, 0, ft_strchr(cmd, ' ') - cmd);
+	else
+		cmd_s = ft_substr(cmd, 0, ft_strlen(cmd));
 	if (!cmd_s)
-		return (NULL);
-	if (ft_strchr(cmd_s, '/'))
-		return (cmd_s);
+		return (perror("malloc"), NULL);
 	while (env[i])
 	{
 		if (ft_strstr(env[i], "PATH") && !ft_strstr(env[i], "_PATH"))
@@ -62,7 +40,7 @@ char	*ft_parse_cmd(char *cmd, char **env)
 	return (NULL);
 }
 
-int	ft_parse_file(char *file, char **env, int mode)
+static int	ft_parse_file(char *file, char **env, int mode)
 {
 	int		i;
 	int		acc;
@@ -70,7 +48,7 @@ int	ft_parse_file(char *file, char **env, int mode)
 	char	*file_path;
 
 	i = 0;
-	if (file && file[0] == '/')
+	if (file && ft_strchr(file, '/'))
 		return (access(file, mode));
 	while (env[i])
 	{
@@ -87,7 +65,7 @@ int	ft_parse_file(char *file, char **env, int mode)
 	return (free(file_path), acc);
 }
 
-t_pipex	*ft_load_node(char *inf, char *outf, char *cmd1, char *cmd2)
+static t_pipex	*ft_load_node(char *inf, char *outf, char *cmd1, char *cmd2)
 {
 	t_pipex	*pipex;
 
