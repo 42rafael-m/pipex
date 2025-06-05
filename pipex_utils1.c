@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafael-m <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 11:26:50 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/05 11:33:53 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/05 14:03:12 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,35 @@ void	ft_error_exit(char *error)
 void	ft_write_cmd_error(char *cmd)
 {
 	if (cmd)
-		write(2, cmd, ft_strlen(cmd));
-	write(2, ": Command not found\n", 20);
+	{
+		if (ft_strchr(cmd, '/'))
+		{
+			perror(cmd);
+			return ;
+		}
+	}
+	perror(cmd);
+}
+
+char	*ft_parse_pwd(char *s, char **env)
+{
+	int		i;
+	char	*t;
+	char	*s_path;
+
+	i = 0;
+	if (ft_strchr(s, '/'))
+		return (s);
+	while (env[i])
+	{
+		if (ft_strstr(env[i], "PWD") && !ft_strstr(env[i], "OLDPWD"))
+		{
+			t = ft_strjoin(env[i] + 4, "/");
+			s_path = ft_strjoin(t, s);
+			free(t);
+			t = NULL;
+		}
+		i++;
+	}
+	return (s_path);
 }

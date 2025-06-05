@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:03:00 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/05 12:15:29 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/05 13:58:24 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,6 @@ char	*ft_cmd_path(char *env_path, char *cmd);
 void	ft_free_node(t_pipex *pipex);
 void	ft_error_exit(char *error);
 void	ft_write_cmd_error(char *cmd);
+char	*ft_parse_pwd(char *s, char **env);
 
 #endif

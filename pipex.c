@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 15:48:27 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/05 11:34:20 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/05 14:00:37 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ char	*ft_cmd_s(char *cmd)
 		return (perror("malloc"), NULL);
 	if (ft_strchr(cmd_s, '/'))
 	{
-		if (access(cmd, X_OK) == -1)
-			perror("access");
 		r = ft_strdup(cmd);
 		if (!r)
 			return (free(cmd_s), perror("malloc"), NULL);
@@ -49,7 +47,7 @@ char	*ft_parse_cmd(char *cmd, char **env)
 	if (!cmd_s)
 		return (NULL);
 	if (ft_strchr(cmd_s, '/') && (access(cmd_s, X_OK) == -1))
-		return (perror("access"), cmd_s);
+		return (cmd_s);
 	if (ft_strchr(cmd_s, '/') && !access(cmd_s, X_OK))
 		return (cmd_s);
 	while (env[i])
@@ -57,8 +55,6 @@ char	*ft_parse_cmd(char *cmd, char **env)
 		if (ft_strstr(env[i], "PATH") && !ft_strstr(env[i], "_PATH"))
 		{
 			cmd_path = ft_cmd_path(env[i] + 5, cmd_s);
-			if (!cmd_path)
-				return (perror("malloc"), NULL);
 			return (cmd_path);
 		}
 		i++;
@@ -126,17 +122,21 @@ int	main(int argc, char **argv, char **envp)
 		return (write(2, "file1 cmd1 cmd2 file2", 22), 1);
 	pipex = ft_load_node(argv[1], argv[4], argv[2], argv[3]);
 	if (!pipex)
-		return (perror("malloc"), 1);
+		return (perror("malloc"), errno);
 	if (ft_parse_file(pipex -> infile, envp, R_OK) == -1)
-		return (perror("access"), errno);
+		return (perror(pipex -> infile), errno);
 	if (ft_parse_file(pipex -> outfile, envp, W_OK) == -1)
-		perror("access");
+		perror(pipex -> outfile);
 	pipex -> cmd1_path = ft_parse_cmd(pipex -> cmd1, envp);
+	if (!pipex -> cmd1_path)
+		pipex -> cmd1_path = ft_parse_pwd(pipex -> cmd1, envp);
 	if (access(pipex -> cmd1_path, X_OK) == -1)
 		ft_write_cmd_error(argv[2]);
 	pipex -> cmd2_path = ft_parse_cmd(pipex -> cmd2, envp);
+	if (!pipex -> cmd2_path)
+		pipex -> cmd2_path = ft_parse_pwd(pipex -> cmd2, envp);
 	if (access(pipex -> cmd2_path, X_OK) == -1)
-		ft_write_cmd_error(argv[1]);
+		ft_write_cmd_error(argv[3]);
 	ft_pipe_fork(pipex, envp);
 	ft_free_node(pipex);
 	return (errno);
