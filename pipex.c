@@ -6,14 +6,14 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 15:48:27 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/05 14:00:37 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/05 15:01:06 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "pipex.h"
 
-char	*ft_cmd_s(char *cmd)
+char	*ft_cmd_s(char *cmd, char **env)
 {
 	char	*pos;
 	char	*cmd_s;
@@ -28,7 +28,7 @@ char	*ft_cmd_s(char *cmd)
 		return (perror("malloc"), NULL);
 	if (ft_strchr(cmd_s, '/'))
 	{
-		r = ft_strdup(cmd);
+		r = ft_parse_pwd(cmd, env);
 		if (!r)
 			return (free(cmd_s), perror("malloc"), NULL);
 		return (free(cmd_s), r);
@@ -43,12 +43,12 @@ char	*ft_parse_cmd(char *cmd, char **env)
 	int		i;
 
 	i = 0;
-	cmd_s = ft_cmd_s(cmd);
+	if (cmd && cmd[0] == '/')
+		return (cmd);
+	cmd_s = ft_cmd_s(cmd, env);
 	if (!cmd_s)
 		return (NULL);
-	if (ft_strchr(cmd_s, '/') && (access(cmd_s, X_OK) == -1))
-		return (cmd_s);
-	if (ft_strchr(cmd_s, '/') && !access(cmd_s, X_OK))
+	if (ft_strchr(cmd_s, '/'))
 		return (cmd_s);
 	while (env[i])
 	{
@@ -70,7 +70,7 @@ int	ft_parse_file(char *file, char **env, int mode)
 	char	*file_path;
 
 	i = 0;
-	if (ft_strchr(file, '/'))
+	if (file && file[0] == '/')
 		return (access(file, mode));
 	while (env[i])
 	{
