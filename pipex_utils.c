@@ -13,7 +13,7 @@
 #include "libft.h"
 #include "pipex.h"
 
-int	ft_child_out(t_pipex *pipex, int *pipefd, char **envp)
+void	ft_child_out(t_pipex *pipex, int *pipefd, char **envp)
 {
 	int		outfd;
 	char	**argv;
@@ -35,9 +35,8 @@ int	ft_child_out(t_pipex *pipex, int *pipefd, char **envp)
 	if (!argv)
 		ft_error_exit("malloc");
 	execve(pipex -> cmd2_path, argv, envp);
-	perror("execve");
 	ft_free_d(argv);
-	exit(errno);
+	ft_error_exit("execve");
 }
 
 void	ft_free_child(t_pipex *pipex)
@@ -50,7 +49,7 @@ void	ft_free_child(t_pipex *pipex)
 		free(pipex -> infile);
 }
 
-int	ft_child_in(t_pipex *pipex, int *pipefd, char **envp)
+void	ft_child_in(t_pipex *pipex, int *pipefd, char **envp)
 {
 	int		infd;
 	char	**argv;
@@ -75,7 +74,6 @@ int	ft_child_in(t_pipex *pipex, int *pipefd, char **envp)
 	ft_free_d(argv);
 	ft_free_child(pipex);
 	ft_error_exit("execve");
-	return (ft_free_d(argv), errno);
 }
 
 int	ft_pipe_fork(t_pipex *pipex, char **envp)
@@ -101,9 +99,9 @@ int	ft_pipe_fork(t_pipex *pipex, char **envp)
 		ft_error_exit("close");
 	if (close(pipefd[0]) == -1)
 		ft_error_exit("close");
-	if (waitpid(pid, &status, 0) == -1)
+	if (wait(&status) == -1)
 		ft_error_exit("wait");
-	if (waitpid(pid2, &status, 0) == -1)
+	if (wait(&status) == -1)
 		ft_error_exit("wait");
 	return (errno);
 }
