@@ -90,5 +90,6 @@ void		ft_rev_char_tab(char *tab);
 void		ft_putnbr(int n);
 char		*ft_strndup(const char *src, size_t n);
 void		ft_free_d(char **ptr);
+char	*ft_strnchr(const char *s, int c, unsigned int n);
 
 #endif

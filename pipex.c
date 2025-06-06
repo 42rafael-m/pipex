@@ -48,7 +48,7 @@ static char	*ft_parse_cmd(char *cmd, char **env)
 	int		i;
 
 	i = 0;
-	if (cmd && ft_strchr(cmd, '/'))
+	if (cmd && ft_strnchr(cmd, '/', ft_spacelen(cmd)))
 		return (cmd);
 	if (cmd && ft_strchr(cmd, ' '))
 		cmd_s = ft_substr(cmd, 0, ft_strchr(cmd, ' ') - cmd);

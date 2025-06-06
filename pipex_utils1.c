@@ -72,3 +72,13 @@ char	*ft_parse_pwd(char *s, char **env)
 	}
 	return (s_path);
 }
+
+unsigned int	ft_spacelen(char *s)
+{
+	int 	i;
+
+	i = 0;
+	while (s[i] && (s[i] != ' '))
+		i++;
+	return (i);
+}
