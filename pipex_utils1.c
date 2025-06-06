@@ -75,7 +75,7 @@ char	*ft_parse_pwd(char *s, char **env)
 
 unsigned int	ft_spacelen(char *s)
 {
-	int 	i;
+	int	i;
 
 	i = 0;
 	while (s[i] && (s[i] != ' '))

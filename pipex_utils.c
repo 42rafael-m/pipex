@@ -31,7 +31,7 @@ void	ft_child_out(t_pipex *pipex, int *pipefd, char **envp)
 		ft_error_exit("close");
 	if (close(pipefd[1]) == -1)
 		ft_error_exit("close");
-	argv = ft_split(pipex -> cmd2, ' ');
+	argv = ft_argv(pipex -> cmd2);
 	if (!argv)
 		ft_error_exit("malloc");
 	execve(pipex -> cmd2_path, argv, envp);
@@ -67,7 +67,7 @@ void	ft_child_in(t_pipex *pipex, int *pipefd, char **envp)
 		ft_error_exit("close");
 	if (close(pipefd[0]) == -1)
 		ft_error_exit("close");
-	argv = ft_split(pipex -> cmd1, ' ');
+	argv = ft_argv(pipex -> cmd1);
 	if (!argv)
 		ft_error_exit("malloc");
 	execve(pipex -> cmd1_path, argv, envp);

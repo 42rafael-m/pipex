@@ -50,10 +50,7 @@ static char	*ft_parse_cmd(char *cmd, char **env)
 	i = 0;
 	if (cmd && ft_strnchr(cmd, '/', ft_spacelen(cmd)))
 		return (cmd);
-	if (cmd && ft_strchr(cmd, ' '))
-		cmd_s = ft_substr(cmd, 0, ft_strchr(cmd, ' ') - cmd);
-	else
-		cmd_s = ft_substr(cmd, 0, ft_strlen(cmd));
+	cmd_s = ft_substr(cmd, 0, ft_spacelen(cmd));
 	if (!cmd_s)
 		return (perror("malloc"), NULL);
 	while (env[i])

@@ -1,6 +1,6 @@
 NAME = pipex
 LIBFT_A = Libft/libft.a
-SRC = pipex.c pipex_utils.c pipex_utils1.c
+SRC = pipex.c pipex_utils.c pipex_utils1.c pipex_utils2.c
 OBJ = $(SRC:.c=.o)
 CFLAGS += -Wall -Wextra -Werror
 

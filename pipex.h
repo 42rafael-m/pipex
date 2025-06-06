@@ -42,5 +42,6 @@ void	ft_error_exit(char *error);
 void	ft_write_cmd_error(char *cmd);
 char	*ft_parse_pwd(char *s, char **env);
 unsigned int	ft_spacelen(char *s);
+char    **ft_argv(char *cmd);
 
 #endif
