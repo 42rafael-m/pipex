@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "Libft/libft.h"
 #include "pipex.h"
 
 void	ft_child_out(t_pipex *pipex, int *pipefd, char **envp)
@@ -80,7 +80,6 @@ int	ft_pipe_fork(t_pipex *pipex, char **envp)
 {
 	int	pipefd[2];
 	int	pid;
-	int	pid2;
 	int	status;
 
 	if (pipe(pipefd) == -1)
@@ -88,12 +87,12 @@ int	ft_pipe_fork(t_pipex *pipex, char **envp)
 	pid = fork();
 	if (pid == -1)
 		ft_error_exit("fork");
-	if (pid == 0 /*&& pipex -> cmd1*/)
+	if (pid == 0 && pipex -> cmd1)
 		ft_child_in(pipex, pipefd, envp);
-	pid2 = fork();
-	if (pid2 == -1)
+	pid = fork();
+	if (pid == -1)
 		ft_error_exit("fork");
-	if (pid2 == 0/* && pipex -> cmd2*/)
+	if (pid == 0 && pipex -> cmd2)
 		ft_child_out(pipex, pipefd, envp);
 	if (close(pipefd[1]) == -1)
 		ft_error_exit("close");

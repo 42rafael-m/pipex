@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "Libft/libft.h"
 #include "pipex.h"
 
 void	ft_free_node(t_pipex *pipex)

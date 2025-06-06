@@ -11,12 +11,11 @@ $(NAME): $(LIBFT_A) $(OBJ)
 
 $(LIBFT_A):
 	make -C Libft
-
 %.o: %.c
 	cc $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ)
+	rm -f $(OBJ) libft.a
 	make clean -C Libft
 
 fclean: clean
