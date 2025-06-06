@@ -103,5 +103,5 @@ int	ft_pipe_fork(t_pipex *pipex, char **envp)
 		ft_error_exit("wait");
 	if (wait(&status) == -1)
 		ft_error_exit("wait");
-	return (errno);
+	return (0);
 }

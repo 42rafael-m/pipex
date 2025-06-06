@@ -145,5 +145,5 @@ int	main(int argc, char **argv, char **envp)
 		ft_write_cmd_error(argv[3]);
 	ft_pipe_fork(pipex, envp);
 	ft_free_node(pipex);
-	return (errno);
+	return (0);
 }
