@@ -1,5 +1,5 @@
 #include "pipex.h"
-#include "Libft/libft.h"
+#include "libft/libft.h"
 
 char    **ft_argv(char *cmd)
 {

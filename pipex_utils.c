@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Libft/libft.h"
+#include "libft/libft.h"
 #include "pipex.h"
 
 void	ft_child_out(t_pipex *pipex, int *pipefd, char **envp)

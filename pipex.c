@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Libft/libft.h"
+#include "libft/libft.h"
 #include "pipex.h"
 
 char	*ft_cmd_path(char *env_path, char *cmd)
