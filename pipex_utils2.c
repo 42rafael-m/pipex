@@ -9,6 +9,7 @@ char    **ft_argv(char *cmd)
     int j;
     int space;
     int start;
+    char    *t;    
 
     i = 1;
     j = 1;
@@ -40,6 +41,12 @@ char    **ft_argv(char *cmd)
         if ((cmd[i] == ' ' && !block) || !cmd[i + 1])
         { 
             argv[j] = ft_substr(cmd, start, i);
+            if (ft_strchr(argv[j], '\'') || ft_strchr(argv[j], '"'))
+            {
+                t = argv[j];
+                argv[j] = ft_strtrim(t, "\"'");
+                free (t);
+            }
             perror(argv[j]);  
             j++;
             i += ft_spacelen(cmd + i);
