@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafael-m <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:23:33 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/09 13:31:54 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:09:15 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,20 +37,20 @@ int	ft_spaces(char *str)
 	return (space);
 }
 
-char	*ft_load_line(char *cmd, int start, int i)
+char	*ft_load_line(char *cmd, int start, size_t len)
 {
 	char	*t;
 	char	*argv;
 
 	if (!cmd)
 		return (NULL);
-	argv = ft_substr(cmd, start, i);
+	argv = ft_substr(cmd, start, len);
 	if (!argv)
 		return (NULL);
 	if (ft_strchr(argv, '\'') || ft_strchr(argv, '"'))
 	{
 		t = argv;
-		argv = ft_strtrim(t, "\"'");
+		argv = ft_strtrim(t, "\"' ");
 		if (!argv)
 			return (NULL);
 		free (t);
@@ -58,29 +58,37 @@ char	*ft_load_line(char *cmd, int start, int i)
 	return (argv);
 }
 
-char	**ft_load_argv(char **argv, char *cmd, int i)
+// int	block(char c, int block)
+// {
+	
+// }
+
+char	**ft_load_argv(char **argv, char *cmd)
 {
 	int	j;
 	int	block;
 	int	start;
+	int	i;
 
+	i = 0;
 	j = 1;
+	start = 0;
 	while (cmd[i])
 	{
-		if (cmd[i] == 123 || cmd[i] == 34 || cmd[i] == 39)
-			block = 1;
-		if (block && (cmd[i] == '}' || cmd[i] == 34 || cmd[i] == 39))
+		if (block && (cmd[i] == 34 || cmd[i] == 39))
 			block = 0;
+		if (!block && (cmd[i] == 34 || cmd[i] == 39))
+			block = 1;
 		if ((cmd[i] == ' ' && !block) || !cmd[i + 1])
 		{
 			argv[j] = ft_load_line(cmd, start, i);
 			if (!argv[j])
 				return (ft_free_d(argv), NULL);
-			i += ft_spacelen(cmd + i);
+			i++;
+			start = i + 1;
+			j++;
 		}
 		i++;
-		start = i + 1;
-		j++;
 	}
 	argv[i] = NULL;
 	return (argv);
@@ -106,6 +114,6 @@ char	**ft_argv(char *cmd)
 	argv[0] = ft_substr(cmd, 0, ft_spacelen(cmd));
 	if (!argv[0])
 		return (NULL);
-	argv = ft_load_argv(argv, cmd, i);
+	argv = ft_load_argv(argv, cmd + i);
 	return (argv);
 }

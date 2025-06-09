@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:03:00 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/09 13:21:38 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/09 15:56:38 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ void	ft_free_node(t_pipex *pipex);
 void	ft_error_exit(char *error);
 void	ft_write_cmd_error(char *cmd);
 char	*ft_parse_pwd(char *s, char **env);
-char	*ft_load_line(char *cmd, int start, int i);
-char	**ft_load_argv(char **argv, char *cmd, int i);
+char	*ft_load_line(char *cmd, int start, size_t len);
+char	**ft_load_argv(char **argv, char *cmd);
 int		ft_spaces(char *str);
 size_t	ft_spacelen(char *s);
 char	**ft_argv(char *cmd);
