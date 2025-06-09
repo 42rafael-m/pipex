@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 15:48:27 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/09 14:52:20 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/09 17:38:09 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc != 5)
 		return (write(2, "file1 cmd1 cmd2 file2", 22), 1);
+	printf("cmd2 = %s\n", argv[3]);
 	pipex = ft_load_node(argv[1], argv[4], argv[2], argv[3]);
 	if (!pipex)
 		return (perror("malloc"), errno);

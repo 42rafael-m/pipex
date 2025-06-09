@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 20:27:40 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/09 13:34:14 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/09 18:23:17 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +91,6 @@ void		ft_putnbr(int n);
 char		*ft_strndup(const char *src, size_t n);
 void		ft_free_d(char **ptr);
 char		*ft_strnchr(const char *s, int c, unsigned int n);
+char		*ft_esc_char(char *s);
 
 #endif

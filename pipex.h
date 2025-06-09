@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:03:00 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/09 15:56:38 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/09 18:44:07 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <errno.h>
 # include <stdlib.h>
 # include <sys/wait.h>
+# define ESC_CHARS "\\\'\"\?abfnrtv"
 
 typedef struct s_pipex
 {
