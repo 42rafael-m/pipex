@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:23:33 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/09 16:09:15 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/09 17:02:19 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,6 @@ char	*ft_load_line(char *cmd, int start, size_t len)
 	return (argv);
 }
 
-// int	block(char c, int block)
-// {
-	
-// }
-
 char	**ft_load_argv(char **argv, char *cmd)
 {
 	int	j;
@@ -84,14 +79,12 @@ char	**ft_load_argv(char **argv, char *cmd)
 			argv[j] = ft_load_line(cmd, start, i);
 			if (!argv[j])
 				return (ft_free_d(argv), NULL);
-			i++;
 			start = i + 1;
 			j++;
 		}
 		i++;
 	}
-	argv[i] = NULL;
-	return (argv);
+	return (argv[i] = NULL, argv);
 }
 
 char	**ft_argv(char *cmd)
