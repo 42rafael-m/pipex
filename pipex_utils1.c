@@ -6,7 +6,7 @@
 /*   By: rafael-m <rafael-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 11:26:50 by rafael-m          #+#    #+#             */
-/*   Updated: 2025/06/05 14:03:12 by rafael-m         ###   ########.fr       */
+/*   Updated: 2025/06/09 13:22:45 by rafael-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char	*ft_parse_pwd(char *s, char **env)
 	return (s_path);
 }
 
-unsigned int	ft_spacelen(char *s)
+size_t	ft_spacelen(char *s)
 {
 	int	i;
 
