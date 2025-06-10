@@ -58,11 +58,11 @@ static char	*ft_parse_cmd(char *cmd, char **env)
 		if (ft_strstr(env[i], "PATH") && !ft_strstr(env[i], "_PATH"))
 		{
 			cmd_path = ft_cmd_path(env[i] + 5, cmd_s);
-			return (cmd_path);
+			return (free(cmd_s), cmd_path);
 		}
 		i++;
 	}
-	return (NULL);
+	return (free(cmd_s), NULL);
 }
 
 static int	ft_parse_file(char *file, char **env, int mode)
@@ -127,7 +127,7 @@ int	main(int argc, char **argv, char **envp)
 	if (!pipex)
 		return (perror("malloc"), errno);
 	if (ft_parse_file(pipex -> infile, envp, R_OK) == -1)
-		return (perror(pipex -> infile), errno);
+		return (perror(pipex -> infile), ft_free_node(pipex), errno);
 	if (ft_parse_file(pipex -> outfile, envp, W_OK) == -1)
 		perror(pipex -> outfile);
 	pipex -> cmd1_path = ft_parse_cmd(pipex -> cmd1, envp);

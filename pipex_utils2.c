@@ -94,14 +94,14 @@ char	**ft_argv(char *cmd)
 {
 	char	**argv;
 	int		space;
-	// int		start;
 	int		i;
 
+	if (!cmd)
+		return (NULL);
 	i = ft_spacelen(cmd) + 1;
 	if (i < 0)
 		return (NULL);
 	space = ft_spaces(cmd);
-	// start = ft_spacelen(cmd) + 1;
 	if (!ft_strchr(cmd, 34) && !ft_strchr(cmd, 39) && !ft_strchr(cmd, 123))
 		return (ft_split(cmd, ' '));
 	argv = (char **)ft_calloc(space + 2, sizeof(char *));
