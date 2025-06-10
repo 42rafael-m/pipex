@@ -44,6 +44,9 @@ char	*ft_load_line(char *cmd, int start, size_t len)
 
 	if (!cmd)
 		return (NULL);
+	if (cmd[0] == 34)
+		argv = ft_esc_char(cmd);
+	else
 	argv = ft_substr(cmd, start, len);
 	if (!argv)
 		return (NULL);
@@ -91,14 +94,14 @@ char	**ft_argv(char *cmd)
 {
 	char	**argv;
 	int		space;
-	int		start;
+	// int		start;
 	int		i;
 
 	i = ft_spacelen(cmd) + 1;
 	if (i < 0)
 		return (NULL);
 	space = ft_spaces(cmd);
-	start = ft_spacelen(cmd) + 1;
+	// start = ft_spacelen(cmd) + 1;
 	if (!ft_strchr(cmd, 34) && !ft_strchr(cmd, 39) && !ft_strchr(cmd, 123))
 		return (ft_split(cmd, ' '));
 	argv = (char **)ft_calloc(space + 2, sizeof(char *));

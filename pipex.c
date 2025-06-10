@@ -123,7 +123,6 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc != 5)
 		return (write(2, "file1 cmd1 cmd2 file2", 22), 1);
-	printf("cmd2 = %s\n", argv[3]);
 	pipex = ft_load_node(argv[1], argv[4], argv[2], argv[3]);
 	if (!pipex)
 		return (perror("malloc"), errno);
