@@ -134,12 +134,12 @@ int	main(int argc, char **argv, char **envp)
 	if (!pipex -> cmd1_path)
 		pipex -> cmd1_path = ft_parse_pwd(pipex -> cmd1, envp);
 	if (access(pipex -> cmd1_path, X_OK) == -1)
-		ft_write_cmd_error(argv[2]);
+		perror (pipex -> cmd1);
 	pipex -> cmd2_path = ft_parse_cmd(pipex -> cmd2, envp);
-	if (!pipex -> cmd2_path)
+	if (!pipex -> cmd2)
 		pipex -> cmd2_path = ft_parse_pwd(pipex -> cmd2, envp);
 	if (access(pipex -> cmd2_path, X_OK) == -1)
-		ft_write_cmd_error(argv[3]);
+		perror (pipex -> cmd2);	
 	ft_pipe_fork(pipex, envp);
 	ft_free_node(pipex);
 	return (0);

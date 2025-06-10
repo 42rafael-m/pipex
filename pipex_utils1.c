@@ -25,30 +25,32 @@ void	ft_free_node(t_pipex *pipex)
 		free(pipex -> outfile);
 	if (pipex -> cmd1_path)
 		free(pipex -> cmd1_path);
+	printf("");
 	if (pipex -> cmd2_path)
 		free(pipex -> cmd2_path);
 	free(pipex);
 	pipex = NULL;
 }
 
-void	ft_error_exit(char *error)
+void	ft_error_exit(char *error, t_pipex *pipex)
 {
+	ft_free_node(pipex);
 	perror(error);
 	exit(errno);
 }
 
-void	ft_write_cmd_error(char *cmd)
-{
-	if (cmd)
-	{
-		if (ft_strchr(cmd, '/'))
-		{
-			perror(cmd);
-			return ;
-		}
-	}
-	perror(cmd);
-}
+// void	ft_write_cmd_error(char *cmd)
+// {
+// 	if (cmd)
+// 	{
+// 		if (ft_strchr(cmd, '/'))
+// 		{
+// 			perror(cmd);
+// 			return ;
+// 		}
+// 	}
+// 	perror(cmd);
+// }
 
 char	*ft_parse_pwd(char *s, char **env)
 {

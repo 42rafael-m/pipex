@@ -39,7 +39,7 @@ int		ft_child(t_pipex *pipex, int *pipefd, char **envp);
 int		ft_pipe_fork(t_pipex *pipex, char **envp);
 char	*ft_cmd_path(char *env_path, char *cmd);
 void	ft_free_node(t_pipex *pipex);
-void	ft_error_exit(char *error);
+void	ft_error_exit(char *error, t_pipex *pipex);
 void	ft_write_cmd_error(char *cmd);
 char	*ft_parse_pwd(char *s, char **env);
 char	*ft_load_line(char *cmd, int start, size_t len);
