@@ -49,9 +49,10 @@ char	*ft_esc_char(char *s)
 		return (NULL);
 	while (s[i])
 	{
-		if (s[i] == '\\' && ft_strchr(ESC_CHARS, s[i + 1]))
-			i += 2;
-		r[j] = s[i];
+		if (s[i] == '\\' && ft_strchr(ESC_CHARS, s[i]))
+			r[j] = s[++i];
+		else
+			r[j] = s[i];
 		i++;
 		j++;
 	}

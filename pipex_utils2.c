@@ -42,21 +42,26 @@ char	*ft_load_line(char *cmd, int start, size_t len)
 	char	*t;
 	char	*argv;
 
+	// printf("cmd ft_l_l = %s\n", cmd);
 	if (!cmd)
 		return (NULL);
 	if (cmd[0] == 34)
+	{
 		argv = ft_esc_char(cmd);
+		// printf("argv ft_l_l = %s\n", argv);
+	}
 	else
-	argv = ft_substr(cmd, start, len);
+		argv = ft_substr(cmd, start, len);
 	if (!argv)
 		return (NULL);
 	if (ft_strchr(argv, '\'') || ft_strchr(argv, '"'))
 	{
 		t = argv;
 		argv = ft_strtrim(t, "\"' ");
+		free (t);
+		// printf("trimmed argv = %s\n", argv);
 		if (!argv)
 			return (NULL);
-		free (t);
 	}
 	return (argv);
 }
@@ -111,5 +116,6 @@ char	**ft_argv(char *cmd)
 	if (!argv[0])
 		return (NULL);
 	argv = ft_load_argv(argv, cmd + i);
+	printf("ft_argv[1] = %s\n", argv[1]);
 	return (argv);
 }
