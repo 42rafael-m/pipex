@@ -25,7 +25,6 @@ void	ft_free_node(t_pipex *pipex)
 		free(pipex -> outfile);
 	if (pipex -> cmd1_path)
 		free(pipex -> cmd1_path);
-	printf("");
 	if (pipex -> cmd2_path)
 		free(pipex -> cmd2_path);
 	free(pipex);

@@ -39,15 +39,15 @@ void	ft_child_out(t_pipex *pipex, int *pipefd, char **envp)
 	ft_error_exit("execve", pipex);
 }
 
-void	ft_free_child(t_pipex *pipex)
-{
-	if (pipex -> cmd1)
-		free(pipex -> cmd1);
-	if (pipex -> cmd1_path)
-		free(pipex -> cmd1_path);
-	if (pipex -> infile)
-		free(pipex -> infile);
-}
+// void	ft_free_child(t_pipex *pipex)
+// {
+// 	if (pipex -> cmd1)
+// 		free(pipex -> cmd1);
+// 	if (pipex -> cmd1_path)
+// 		free(pipex -> cmd1_path);
+// 	if (pipex -> infile)
+// 		free(pipex -> infile);
+// }
 
 void	ft_child_in(t_pipex *pipex, int *pipefd, char **envp)
 {
@@ -93,7 +93,7 @@ int	ft_pipe_fork(t_pipex *pipex, char **envp)
 		ft_error_exit("fork", pipex);
 	if (pid == 0 && pipex -> cmd2)
 		ft_child_out(pipex, pipefd, envp);
-	if (close(pipefd[1]) == -1, pipex)
+	if (close(pipefd[1]) == -1)
 		ft_error_exit("close", pipex);
 	if (close(pipefd[0]) == -1)
 		ft_error_exit("close", pipex);
