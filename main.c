@@ -8,7 +8,7 @@ int main(int argc, char **argv)
 {
     int i = 0;
     char **r = ft_load_mid_cmds(argv, argc);
-	while (i < (argc))
+	while (i < (argc - 5))
 	{
 		printf("r[%d] = %s\n", i, r[i]);
         if (r[i])

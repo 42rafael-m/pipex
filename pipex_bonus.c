@@ -78,7 +78,7 @@ static int	ft_parse_file(char *file, char **env, int mode)
 	return (free(file_path), acc);
 }
 
-static t_pipex	*ft_load_node(char *inf, char *outf, char *cmd1, char *cmd2)
+static t_pipex	*ft_load_node(char **argv, int argc)
 {
 	t_pipex	*pipex;
 
@@ -89,10 +89,10 @@ static t_pipex	*ft_load_node(char *inf, char *outf, char *cmd1, char *cmd2)
 	pipex -> cmd2_path = NULL;
 	pipex -> next = NULL;
 	pipex -> mid_cmds = NULL;
-	pipex -> cmd1 = ft_strdup(cmd1);
+	pipex -> cmd1 = ft_strdup(argv[2]);
 	if (!pipex -> cmd1)
 		return (free(pipex), NULL);
-	pipex -> cmd2 = ft_strdup(cmd2);
+	pipex -> cmd2 = ft_strdup(argv);
 	if (!pipex -> cmd2)
 		return (free(pipex -> cmd1), free(pipex), NULL);
 	pipex -> infile = ft_strdup(inf);
@@ -114,7 +114,6 @@ int	main(int argc, char **argv, char **envp)
 	pipex = ft_load_node(argv[1], argv[4], argv[2], argv[3]);
 	if (!pipex)
 		return (perror("malloc"), errno);
-	pipex -> mid_cmds = ft_load_mid_cmds(argv, argc);
 	if (ft_parse_file(pipex -> infile, envp, R_OK) == -1)
 		return (perror(pipex -> infile), ft_free_node(pipex), errno);
 	if (ft_parse_file(pipex -> outfile, envp, W_OK) == -1)

@@ -66,13 +66,12 @@ char	**ft_load_mid_cmds(char **argv, int argc)
 	int	i;
 
 	i = 0;
-	r = (char **)ft_calloc(argc, sizeof(char *));
-	while (i < (argc - 1))
+	r = (char **)ft_calloc(argc - 4, sizeof(char *));
+	while (i < (argc - 5))
 	{
-		r[i] = ft_strdup(argv[i + 1]);
-		printf("%s\n", r[i]);
+		r[i] = ft_strdup(argv[i + 3]);
 		if (!r[i])
-			return (NULL);
+			return (perror("malloc"), NULL);
 		i++;
 	}
 	r[i] = NULL;
