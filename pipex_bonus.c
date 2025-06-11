@@ -1,5 +1,5 @@
 #include "libft/libft.h"
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 char	*ft_cmd_path(char *env_path, char *cmd)
 {
@@ -87,18 +87,17 @@ static t_pipex	*ft_load_node(char *inf, char *outf, char *cmd1, char *cmd2)
 		return (NULL);
 	pipex -> cmd1_path = NULL;
 	pipex -> cmd2_path = NULL;
-	pipex -> cmd2 = NULL;
-	pipex -> infile = NULL;
-	pipex -> outfile = NULL;
+	pipex -> next = NULL;
+	pipex -> mid_cmds = NULL;
 	pipex -> cmd1 = ft_strdup(cmd1);
 	if (!pipex -> cmd1)
 		return (free(pipex), NULL);
 	pipex -> cmd2 = ft_strdup(cmd2);
 	if (!pipex -> cmd2)
-		return (ft_free_node(pipex), NULL);
+		return (free(pipex -> cmd1), free(pipex), NULL);
 	pipex -> infile = ft_strdup(inf);
 	if (!pipex -> infile)
-		return (ft_free_node(pipex), NULL);
+		return (free(pipex -> cmd1), free(pipex -> cmd2), free(pipex), NULL);
 	pipex -> outfile = ft_strdup(outf);
 	if (!pipex -> outfile)
 		return (ft_free_node(pipex), NULL);
@@ -109,12 +108,13 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	*pipex;
 	int	status;
+	int	n;
 
-	if (argc != 5)
-		return (write(2, "file1 cmd1 cmd2 file2", 22), 1);
+	n = 1;
 	pipex = ft_load_node(argv[1], argv[4], argv[2], argv[3]);
 	if (!pipex)
 		return (perror("malloc"), errno);
+	pipex -> mid_cmds = ft_load_mid_cmds(argv, argc);
 	if (ft_parse_file(pipex -> infile, envp, R_OK) == -1)
 		return (perror(pipex -> infile), ft_free_node(pipex), errno);
 	if (ft_parse_file(pipex -> outfile, envp, W_OK) == -1)

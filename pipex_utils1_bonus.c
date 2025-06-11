@@ -59,3 +59,22 @@ size_t	ft_spacelen(char *s)
 		i++;
 	return (i);
 }
+
+char	**ft_load_mid_cmds(char **argv, int argc)
+{
+	char	**r;
+	int	i;
+
+	i = 0;
+	r = (char **)ft_calloc(argc, sizeof(char *));
+	while (i < (argc - 1))
+	{
+		r[i] = ft_strdup(argv[i + 1]);
+		printf("%s\n", r[i]);
+		if (!r[i])
+			return (NULL);
+		i++;
+	}
+	r[i] = NULL;
+	return (r);
+}

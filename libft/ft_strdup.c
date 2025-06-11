@@ -28,6 +28,8 @@ char	*ft_strdup(const char *src)
 	char		*dest;
 	size_t		size;
 
+	if (!src)
+		return (NULL);
 	size = ft_strlen(src);
 	dest = (char *)ft_calloc((size + 1), sizeof(char));
 	if (!dest)

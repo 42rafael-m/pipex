@@ -16,8 +16,10 @@ typedef struct s_pipex
 	char	*cmd2;
 	char	*cmd1_path;
 	char	*cmd2_path;
+	char	**mid_cmds;
 	char	*infile;
 	char	*outfile;
+	struct s_pipex	*next;
 }	t_pipex;
 
 int		ft_parent(t_pipex *pipex, int *pipefd, char **envp);
@@ -35,5 +37,6 @@ char	**ft_load_argv(char **argv, char *cmd);
 int		ft_spaces(char *str);
 size_t	ft_spacelen(char *s);
 char	**ft_argv(char *cmd);
+char	**ft_load_mid_cmds(char **argv, int argc);
 
 #endif
