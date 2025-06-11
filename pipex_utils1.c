@@ -38,19 +38,6 @@ void	ft_error_exit(char *error, t_pipex *pipex)
 	exit(errno);
 }
 
-// void	ft_write_cmd_error(char *cmd)
-// {
-// 	if (cmd)
-// 	{
-// 		if (ft_strchr(cmd, '/'))
-// 		{
-// 			perror(cmd);
-// 			return ;
-// 		}
-// 	}
-// 	perror(cmd);
-// }
-
 char	*ft_parse_pwd(char *s, char **env)
 {
 	int		i;

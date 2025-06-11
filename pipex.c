@@ -120,6 +120,7 @@ static t_pipex	*ft_load_node(char *inf, char *outf, char *cmd1, char *cmd2)
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	*pipex;
+	int	status;
 
 	if (argc != 5)
 		return (write(2, "file1 cmd1 cmd2 file2", 22), 1);
@@ -140,7 +141,7 @@ int	main(int argc, char **argv, char **envp)
 		pipex -> cmd2_path = ft_parse_pwd(pipex -> cmd2, envp);
 	if (access(pipex -> cmd2_path, X_OK) == -1)
 		perror (pipex -> cmd2);	
-	ft_pipe_fork(pipex, envp);
+	status = ft_pipe_fork(pipex, envp);
 	ft_free_node(pipex);
-	return (0);
+	return (status);
 }
