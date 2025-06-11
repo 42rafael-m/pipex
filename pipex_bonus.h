@@ -19,6 +19,7 @@ typedef struct s_pipex
 	char	**mid_cmds;
 	char	*infile;
 	char	*outfile;
+	char	**envp;
 	struct s_pipex	*next;
 }	t_pipex;
 
@@ -32,11 +33,12 @@ void	ft_free_node(t_pipex *pipex);
 void	ft_error_exit(char *error, t_pipex *pipex);
 void	ft_write_cmd_error(char *cmd);
 char	*ft_parse_pwd(char *s, char **env);
+t_pipex	*ft_load_node(char *inf, char *outf, char *cmd1, char cmd2);
 char	*ft_load_line(char *cmd, int start, size_t len);
 char	**ft_load_argv(char **argv, char *cmd);
 int		ft_spaces(char *str);
 size_t	ft_spacelen(char *s);
 char	**ft_argv(char *cmd);
-char	**ft_load_mid_cmds(char **argv, int argc);
+t_pipex	*ft_load_list(int argc, char **argv, char **envp);
 
 #endif

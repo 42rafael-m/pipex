@@ -1,6 +1,6 @@
 
 #include "libft/libft.h"
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 void	ft_child_out(t_pipex *pipex, int *pipefd, char **envp)
 {
@@ -86,16 +86,41 @@ int	ft_pipe_fork(t_pipex *pipex, char **envp)
 	return (status);
 }
 
-t_pipex	ft_load_list(int argc, char **argv)
+t_pipex	*ft_load_list(int argc, char **argv, char **envp)
 {
 	int	n;
+	t_pipex	*pipex;
+	t_pipex	*t;
+	t_pipex	*start;
 
-	n = 1;
-	while (n < argc - 1)
+	n = 0;
+	t = NULL;
+	while (n <= argc - 4)
 	{
-		
+		if (n == 0)
+		{
+			pipex = ft_load_node(argv[1], NULL, argv[2], argv[3]);
+			start = pipex;
+		}
+		else if (n == (argc - 4))
+			pipex = ft_load_node(NULL, argv[argc - 1], argv[2], argv[3]);
+		else
+			pipex = ft_load_node(NULL, NULL, argv[n + 3], argv[n + 4]);
+			pipex -> next = t;
+		pipex -> cmd1_path = ft_parse_cmd(pipex -> cmd1, envp);
+		if (!pipex -> cmd1_path)
+			pipex -> cmd1_path = ft_parse_pwd(pipex -> cmd1, envp);
+		if (access(pipex -> cmd1_path, X_OK) == -1)
+			perror (pipex -> cmd1);
+		pipex -> cmd2_path = ft_parse_cmd(pipex -> cmd2, envp);
+		if (!pipex -> cmd2)
+			pipex -> cmd2_path = ft_parse_pwd(pipex -> cmd2, envp);
+		if (access(pipex -> cmd2_path, X_OK) == -1)
+			perror (pipex -> cmd2);
+		t = pipex;
 	}
-	
+	pipex -> next = NULL;
+	return (start);
 }
 
 void	ft_child_middle(t_pipex *pipex, char **envp, int *pipefd, int *pipefd2)

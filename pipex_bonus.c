@@ -29,7 +29,7 @@ char	*ft_cmd_path(char *env_path, char *cmd)
 	return (ft_free_d(path), NULL);
 }
 
-static char	*ft_parse_cmd(char *cmd, char **env)
+char	*ft_parse_cmd(char *cmd, char **env)
 {
 	char	*cmd_path;
 	char	*cmd_s;
@@ -53,7 +53,7 @@ static char	*ft_parse_cmd(char *cmd, char **env)
 	return (free(cmd_s), NULL);
 }
 
-static int	ft_parse_file(char *file, char **env, int mode)
+int	ft_parse_file(char *file, char **env, int mode)
 {
 	int		i;
 	int		acc;
@@ -78,7 +78,7 @@ static int	ft_parse_file(char *file, char **env, int mode)
 	return (free(file_path), acc);
 }
 
-static t_pipex	*ft_load_node(char **argv, int argc)
+t_pipex	*ft_load_node(char *inf, char *outf, char *cmd1, char cmd2)
 {
 	t_pipex	*pipex;
 
@@ -89,10 +89,10 @@ static t_pipex	*ft_load_node(char **argv, int argc)
 	pipex -> cmd2_path = NULL;
 	pipex -> next = NULL;
 	pipex -> mid_cmds = NULL;
-	pipex -> cmd1 = ft_strdup(argv[2]);
+	pipex -> cmd1 = ft_strdup(cmd1);
 	if (!pipex -> cmd1)
 		return (free(pipex), NULL);
-	pipex -> cmd2 = ft_strdup(argv);
+	pipex -> cmd2 = ft_strdup(cmd2);
 	if (!pipex -> cmd2)
 		return (free(pipex -> cmd1), free(pipex), NULL);
 	pipex -> infile = ft_strdup(inf);
@@ -118,16 +118,7 @@ int	main(int argc, char **argv, char **envp)
 		return (perror(pipex -> infile), ft_free_node(pipex), errno);
 	if (ft_parse_file(pipex -> outfile, envp, W_OK) == -1)
 		perror(pipex -> outfile);
-	pipex -> cmd1_path = ft_parse_cmd(pipex -> cmd1, envp);
-	if (!pipex -> cmd1_path)
-		pipex -> cmd1_path = ft_parse_pwd(pipex -> cmd1, envp);
-	if (access(pipex -> cmd1_path, X_OK) == -1)
-		perror (pipex -> cmd1);
-	pipex -> cmd2_path = ft_parse_cmd(pipex -> cmd2, envp);
-	if (!pipex -> cmd2)
-		pipex -> cmd2_path = ft_parse_pwd(pipex -> cmd2, envp);
-	if (access(pipex -> cmd2_path, X_OK) == -1)
-		perror (pipex -> cmd2);	
+	
 	status = ft_pipe_fork(pipex, envp);
 	ft_free_node(pipex);
 	return (status);
