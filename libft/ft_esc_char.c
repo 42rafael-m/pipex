@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
-# define ESC_CHARS "\\\'\"\?abfnrtv"
+#define ESC_CHARS "\\\'\"\?abfnrtv"
 
 static int	ft_len(char *s)
 {
@@ -34,14 +34,14 @@ static int	ft_len(char *s)
 
 char	*ft_esc_char(char *s)
 {
-    int	len;
-    char	*r;
-    int	i;
-    int	j;
-    
-    i = 0;
-    j = 0;
-    if (!s)
+	int		len;
+	char	*r;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	if (!s)
 		return (NULL);
 	len = ft_len(s);
 	r = (char *)ft_calloc(len + 1, sizeof(char));
